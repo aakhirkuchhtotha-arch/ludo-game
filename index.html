@@ -2,366 +2,288 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>MR Ludo</title>
 
 <style>
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:linear-gradient(135deg,#0f172a,#1e293b);
-    color:white;
-    text-align:center;
+margin:0;
+font-family:Arial,sans-serif;
+background:linear-gradient(135deg,#0f172a,#1e293b);
+color:#fff;
+text-align:center
 }
 
-h1{
-    margin:15px 0 4px;
-    font-size:32px;
-}
-
-.subtitle{
-    color:#cbd5e1;
-    margin-bottom:10px;
-}
+h1{margin:15px 0 4px;font-size:34px}
+.subtitle{color:#cbd5e1;margin-bottom:12px}
 
 .game{
-    width:min(96vw,680px);
-    margin:auto;
-    padding:8px;
+width:min(96vw,680px);
+margin:auto;
+padding:8px
 }
 
-.info{
-    display:flex;
-    gap:8px;
-    margin:10px 0;
+.topbar{
+display:flex;
+gap:8px;
+margin-bottom:10px
 }
 
 .infoBox{
-    flex:1;
-    background:#334155;
-    padding:9px;
-    border-radius:12px;
-    font-weight:bold;
+flex:1;
+background:#334155;
+padding:10px;
+border-radius:12px;
+font-weight:bold
 }
 
 #turn{
-    color:#facc15;
-    font-size:18px;
-    font-weight:bold;
-    margin:10px;
+font-size:19px;
+font-weight:bold;
+color:#facc15;
+margin:12px 0
 }
 
 .board{
-    position:relative;
-    width:min(95vw,620px);
-    aspect-ratio:1;
-    margin:auto;
-    background:#fff;
-    border:6px solid #fff;
-    border-radius:12px;
-    overflow:hidden;
-    box-shadow:0 15px 45px #0009;
+position:relative;
+width:min(94vw,600px);
+aspect-ratio:1;
+margin:auto;
+background:#f8fafc;
+border:7px solid white;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 15px 40px #0009
 }
 
-/* HOME AREAS */
+/* HOME */
 
 .home{
-    position:absolute;
-    width:40%;
-    height:40%;
-    z-index:1;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+position:absolute;
+width:42%;
+height:42%;
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:1
 }
 
-.redHome{
-    left:0;
-    top:0;
-    background:#ef4444;
+.redHome{left:0;top:0;background:#ef4444}
+.greenHome{right:0;top:0;background:#22c55e}
+.yellowHome{left:0;bottom:0;background:#facc15}
+.blueHome{right:0;bottom:0;background:#3b82f6}
+
+.homeBox{
+width:70%;
+height:70%;
+background:#fff;
+border-radius:18px;
+display:grid;
+grid-template-columns:1fr 1fr;
+place-items:center;
+padding:10px
 }
 
-.greenHome{
-    right:0;
-    top:0;
-    background:#22c55e;
+.homeDot{
+width:27px;
+height:27px;
+border-radius:50%;
+border:3px solid white
 }
 
-.yellowHome{
-    left:0;
-    bottom:0;
-    background:#facc15;
-}
+.redHome .homeDot{background:#dc2626}
+.greenHome .homeDot{background:#16a34a}
+.yellowHome .homeDot{background:#ca8a04}
+.blueHome .homeDot{background:#2563eb}
 
-.blueHome{
-    right:0;
-    bottom:0;
-    background:#3b82f6;
-}
+/* 15x15 LUDO BOARD */
 
-.homeInner{
-    width:68%;
-    height:68%;
-    background:#fff;
-    border-radius:18px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    place-items:center;
-}
-
-.homeSpot{
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    background:#ddd;
-    border:3px solid white;
-}
-
-.redHome .homeSpot{
-    background:#dc2626;
-}
-
-.greenHome .homeSpot{
-    background:#16a34a;
-}
-
-.yellowHome .homeSpot{
-    background:#ca8a04;
-}
-
-.blueHome .homeSpot{
-    background:#2563eb;
-}
-
-/* PATH */
-
-.path{
-    position:absolute;
-    left:20%;
-    top:20%;
-    width:60%;
-    height:60%;
-    display:grid;
-    grid-template-columns:repeat(13,1fr);
-    grid-template-rows:repeat(13,1fr);
-    z-index:3;
+.grid{
+position:absolute;
+left:20%;
+top:20%;
+width:60%;
+height:60%;
+display:grid;
+grid-template-columns:repeat(15,1fr);
+grid-template-rows:repeat(15,1fr);
+z-index:3
 }
 
 .cell{
-    border:1px solid #94a3b8;
-    background:#f8fafc;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:#64748b;
-    font-size:8px;
+border:1px solid #cbd5e1;
+background:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:7px;
+color:#64748b
 }
+
+.routeCell{background:#f8fafc}
+.redStart{background:#fecaca!important}
+.greenStart{background:#bbf7d0!important}
+.yellowStart{background:#fef08a!important}
+.blueStart{background:#bfdbfe!important}
 
 .safe{
-    background:#fde68a !important;
+background:#fde68a!important;
+font-size:12px
 }
 
-.redStart{
-    background:#fecaca !important;
-}
+/* HOME LANES */
 
-.greenStart{
-    background:#bbf7d0 !important;
-}
-
-.yellowStart{
-    background:#fef08a !important;
-}
-
-.blueStart{
-    background:#bfdbfe !important;
-}
+.redLane{background:#fecaca!important}
+.greenLane{background:#bbf7d0!important}
+.yellowLane{background:#fef08a!important}
+.blueLane{background:#bfdbfe!important}
 
 /* CENTER */
 
 .center{
-    position:absolute;
-    left:40%;
-    top:40%;
-    width:20%;
-    height:20%;
-    z-index:5;
-    background:conic-gradient(
-        #ef4444 0 25%,
-        #22c55e 25% 50%,
-        #3b82f6 50% 75%,
-        #facc15 75% 100%
-    );
-    border:3px solid white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:26px;
+position:absolute;
+left:40%;
+top:40%;
+width:20%;
+height:20%;
+z-index:6;
+background:conic-gradient(
+#ef4444 0 25%,
+#22c55e 25% 50%,
+#3b82f6 50% 75%,
+#facc15 75% 100%
+);
+border:3px solid white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:25px
 }
 
 /* PIECES */
 
 .piece{
-    position:absolute;
-    width:29px;
-    height:29px;
-    border-radius:50%;
-    border:3px solid white;
-    z-index:30;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:white;
-    font-size:10px;
-    font-weight:bold;
-    cursor:pointer;
-    box-shadow:0 3px 8px #0009;
-
-    transition:
-        left .18s linear,
-        top .18s linear,
-        transform .15s;
+position:absolute;
+width:29px;
+height:29px;
+border-radius:50%;
+border:3px solid white;
+box-shadow:0 3px 7px #0009;
+z-index:30;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:10px;
+font-weight:bold;
+color:white;
+cursor:pointer;
+transition:left .18s linear,top .18s linear,transform .15s
 }
 
-.piece:hover{
-    transform:scale(1.12);
-}
-
-.red{
-    background:#dc2626;
-}
-
-.green{
-    background:#16a34a;
-}
-
-.yellow{
-    background:#ca8a04;
-}
-
-.blue{
-    background:#2563eb;
-}
+.red{background:#dc2626}
+.green{background:#16a34a}
+.yellow{background:#ca8a04}
+.blue{background:#2563eb}
 
 .selectable{
-    outline:4px solid #facc15;
-    animation:pulse .8s infinite;
+outline:4px solid #facc15;
+animation:pulse .8s infinite
 }
 
 @keyframes pulse{
-    0%{
-        transform:scale(1);
-    }
-
-    50%{
-        transform:scale(1.15);
-    }
-
-    100%{
-        transform:scale(1);
-    }
+50%{transform:scale(1.16)}
 }
 
 /* CONTROLS */
 
 .controls{
-    margin-top:14px;
-    background:#1e293b;
-    padding:16px;
-    border-radius:18px;
+margin-top:15px;
+background:#1e293b;
+padding:17px;
+border-radius:18px
 }
 
 #dice{
-    font-size:62px;
-    height:72px;
+font-size:64px;
+height:75px
 }
 
 #message{
-    min-height:28px;
-    margin:8px;
-    color:#e2e8f0;
+min-height:28px;
+margin:8px;
+color:#e2e8f0
 }
 
 button{
-    border:0;
-    padding:13px 25px;
-    margin:5px;
-    border-radius:30px;
-    font-size:17px;
-    font-weight:bold;
-    cursor:pointer;
-    background:#facc15;
-    color:#111827;
+border:0;
+padding:13px 23px;
+border-radius:30px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+background:#facc15;
+color:#111827;
+margin:5px
 }
 
 button:disabled{
-    opacity:.5;
+opacity:.45;
+cursor:not-allowed
+}
+
+.extraPanel{
+margin-top:12px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px
+}
+
+.panel{
+background:#334155;
+padding:12px;
+border-radius:12px
+}
+
+.panel input{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:0;
+margin:6px 0
 }
 
 .players{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-    margin-top:10px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px;
+margin-top:10px
 }
 
 .player{
-    padding:9px;
-    border-radius:10px;
-    font-weight:bold;
+padding:9px;
+border-radius:10px;
+font-weight:bold
 }
 
-.pRed{
-    background:#dc2626;
-}
-
-.pGreen{
-    background:#16a34a;
-}
-
-.pYellow{
-    background:#ca8a04;
-}
-
-.pBlue{
-    background:#2563eb;
-}
+.pRed{background:#dc2626}
+.pGreen{background:#16a34a}
+.pYellow{background:#ca8a04}
+.pBlue{background:#2563eb}
 
 .footer{
-    margin:15px;
-    color:#94a3b8;
-    font-size:13px;
+margin:18px;
+color:#94a3b8;
+font-size:13px
 }
 
 @media(max-width:430px){
-
-    h1{
-        font-size:27px;
-    }
-
-    .piece{
-        width:24px;
-        height:24px;
-        font-size:8px;
-    }
-
-    .homeSpot{
-        width:22px;
-        height:22px;
-    }
-
-    #dice{
-        font-size:55px;
-    }
-
-    button{
-        width:90%;
-    }
+h1{font-size:28px}
+.piece{width:24px;height:24px;font-size:8px}
+#dice{font-size:56px}
+button{width:90%}
+.extraPanel{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -369,84 +291,67 @@ button:disabled{
 <body>
 
 <h1>🎲 MR Ludo</h1>
-
-<div class="subtitle">
-Real Style Online Ludo
-</div>
+<div class="subtitle">Free Online Ludo Game</div>
 
 <div class="game">
 
-<div class="info">
-
+<div class="topbar">
 <div class="infoBox">
-🏆 Score
-<br>
+🏆 Score<br>
 <span id="score">0</span>
 </div>
 
 <div class="infoBox">
-🎯 Player
-<br>
+🎯 Turn<br>
 <span id="playerName">Red</span>
 </div>
-
 </div>
 
-<div id="turn">
-🔴 Red की बारी
-</div>
+<div id="turn">🔴 Red Player की बारी</div>
 
 <div class="board" id="board">
 
-<!-- RED HOME -->
+<!-- HOMES -->
 
 <div class="home redHome">
-<div class="homeInner">
-<div class="homeSpot"></div>
-<div class="homeSpot"></div>
-<div class="homeSpot"></div>
-<div class="homeSpot"></div>
+<div class="homeBox">
+<div class="homeDot"></div>
+<div class="homeDot"></div>
+<div class="homeDot"></div>
+<div class="homeDot"></div>
 </div>
 </div>
-
-<!-- GREEN HOME -->
 
 <div class="home greenHome">
-<div class="homeInner">
-<div class="homeSpot"></div>
-<div class="homeSpot"></div>
-<div class="homeSpot"></div>
-<div class="homeSpot"></div>
+<div class="homeBox">
+<div class="homeDot"></div>
+<div class="homeDot"></div>
+<div class="homeDot"></div>
+<div class="homeDot"></div>
 </div>
 </div>
-
-<!-- YELLOW HOME -->
 
 <div class="home yellowHome">
-<div class="homeInner">
-<div class="homeSpot"></div>
-<div class="homeSpot"></div>
-<div class="homeSpot"></div>
-<div class="homeSpot"></div>
+<div class="homeBox">
+<div class="homeDot"></div>
+<div class="homeDot"></div>
+<div class="homeDot"></div>
+<div class="homeDot"></div>
 </div>
 </div>
-
-<!-- BLUE HOME -->
 
 <div class="home blueHome">
-<div class="homeInner">
-<div class="homeSpot"></div>
-<div class="homeSpot"></div>
-<div class="homeSpot"></div>
-<div class="homeSpot"></div>
+<div class="homeBox">
+<div class="homeDot"></div>
+<div class="homeDot"></div>
+<div class="homeDot"></div>
+<div class="homeDot"></div>
 </div>
 </div>
 
-<div class="path" id="path"></div>
+<div class="grid" id="grid"></div>
 
-<div class="center">
-★
-</div>
+<div class="center">★</div>
 
 </div>
 
@@ -467,12 +372,34 @@ Dice Roll करके गेम शुरू करें
 </button>
 
 <div class="players">
-
 <div class="player pRed">🔴 Red</div>
 <div class="player pGreen">🟢 Green</div>
 <div class="player pYellow">🟡 Yellow</div>
 <div class="player pBlue">🔵 Blue</div>
+</div>
 
+<div class="extraPanel">
+
+<div class="panel">
+🎁 Daily Bonus
+<br>
+<button onclick="dailyBonus()">Claim Bonus</button>
+</div>
+
+<div class="panel">
+👥 Friend Room
+<input id="roomCode" placeholder="Room Code">
+<button onclick="createRoom()">Create Room</button>
+<button onclick="joinRoom()">Join Room</button>
+</div>
+
+</div>
+
+<div class="panel" style="margin-top:8px">
+🔗 Referral Code:
+<strong id="refCode">MRLUDO-2026</strong>
+<br>
+<small>Referral code share करके bonus system use करें।</small>
 </div>
 
 </div>
@@ -485,1144 +412,1125 @@ Dice Roll करके गेम शुरू करें
 
 <script>
 
-/* =====================================
-   PLAYERS
-===================================== */
+/* =====================================================
+   PLAYER DATA
+===================================================== */
 
-const players = [
-
+const players=[
 {
-    name:"Red",
-    emoji:"🔴",
-    color:"red",
-    start:0
+name:"Red",
+emoji:"🔴",
+color:"red",
+start:0
 },
-
 {
-    name:"Green",
-    emoji:"🟢",
-    color:"green",
-    start:13
+name:"Green",
+emoji:"🟢",
+color:"green",
+start:13
 },
-
 {
-    name:"Yellow",
-    emoji:"🟡",
-    color:"yellow",
-    start:26
+name:"Yellow",
+emoji:"🟡",
+color:"yellow",
+start:26
 },
-
 {
-    name:"Blue",
-    emoji:"🔵",
-    color:"blue",
-    start:39
+name:"Blue",
+emoji:"🔵",
+color:"blue",
+start:39
 }
-
 ];
 
 
-/* =====================================
-   STANDARD 52 CELL OUTER ROUTE
-===================================== */
+/* =====================================================
+   DICE
+===================================================== */
 
-const route = [
+const diceFaces=[
+"⚀","⚁","⚂","⚃","⚄","⚅"
+];
 
-[0,5],[0,6],[0,7],
+
+/* =====================================================
+   STANDARD 52 OUTER TRACK
+===================================================== */
+
+const track=[
+[0,6],
+[1,6],
+[2,6],
+[3,6],
+[4,6],
+[5,6],
+[6,6],
+[6,5],
+[6,4],
+[6,3],
+[6,2],
+[6,1],
+[6,0],
+
+[7,0],
+[8,0],
+[8,1],
+[8,2],
+[8,3],
+[8,4],
+[8,5],
+[8,6],
+
+[9,6],
+[10,6],
+[11,6],
+[12,6],
+[13,6],
+[14,6],
+
+[14,7],
+[14,8],
+
+[13,8],
+[12,8],
+[11,8],
+[10,8],
+[9,8],
+[8,8],
+
+[8,9],
+[8,10],
+[8,11],
+[8,12],
+[8,13],
+[8,14],
+
+[7,14],
+[6,14],
+[6,13],
+[6,12],
+[6,11],
+[6,10],
+[6,9],
+[6,8],
+
+[5,8],
+[4,8],
+[3,8],
+[2,8],
+[1,8],
+[0,8],
+
+[0,7]
+];
+
+
+/* =====================================================
+   SAFE CELLS
+===================================================== */
+
+const safeCells=[
+0,8,13,21,26,34,39,47
+];
+
+
+/* =====================================================
+   PLAYER HOME LANES
+   Each player gets 6 finishing cells.
+===================================================== */
+
+const homeLanes=[
+
+[
 [1,7],
 [2,7],
 [3,7],
 [4,7],
 [5,7],
+[6,7]
+],
 
-[5,8],
-[5,9],
-[5,10],
-[5,11],
-[5,12],
-[6,12],
-[7,12],
-
-[7,13],
-[8,13],
-[9,13],
-[10,13],
-[11,13],
-[12,13],
-[12,12],
-
-[12,11],
-[12,10],
-[12,9],
-[12,8],
-[12,7],
-
-[13,7],
-[14,7],
-
-[14,6],
-[14,5],
-
-[13,5],
-[12,5],
-[12,4],
-[12,3],
-[12,2],
-[12,1],
-
-[11,1],
-[10,1],
-[9,1],
-[8,1],
+[
 [7,1],
-
-[7,0],
-[6,0],
-[5,0],
-[4,0],
-[3,0],
-[2,0],
-[1,0],
-
-[0,0],
-[0,1],
-[0,2],
-[0,3],
-[0,4]
-
-];
-
-
-/*
-ऊपर वाला route visual board के लिए है।
-हम actual movement के लिए 52 logical cells
-का अपना साफ route इस्तेमाल करेंगे।
-*/
-
-
-const logicalRoute = [
-
-[0,5],[0,6],[0,7],[1,7],[2,7],[3,7],[4,7],
-[5,7],[5,8],[5,9],[5,10],[5,11],[5,12],
-[6,12],[7,12],[7,13],[8,13],[9,13],[10,13],
-[11,13],[12,13],[12,12],[12,11],[12,10],
-[12,9],[12,8],[12,7],[13,7],[14,7],[14,6],
-[14,5],[13,5],[12,5],[12,4],[12,3],[12,2],
-[12,1],[11,1],[10,1],[9,1],[8,1],[7,1],
-[7,0],[6,0],[5,0],[4,0],[3,0],[2,0],
-[1,0],[0,0],[0,1],[0,2],[0,3],[0,4]
-
-];
-
-
-/* =====================================
-   DICE
-===================================== */
-
-const diceFaces = [
-"⚀",
-"⚁",
-"⚂",
-"⚃",
-"⚄",
-"⚅"
-];
-
-
-/* =====================================
-   GAME VARIABLES
-===================================== */
-
-let currentPlayer = 0;
-
-let diceValue = 0;
-
-let waitingForPiece = false;
-
-let moving = false;
-
-let score = 0;
-
-let winner = false;
-
-
-/*
--1 = घर के अंदर
-0 = starting cell
-1 = अगला cell
-...
-50
-51
-52...
-56 = HOME
-*/
-
-let positions = [
-
-[-1,-1,-1,-1],
-
-[-1,-1,-1,-1],
-
-[-1,-1,-1,-1],
-
-[-1,-1,-1,-1]
-
-];
-
-
-/* =====================================
-   CREATE BOARD
-===================================== */
-
-function createBoard(){
-
-    const path = document.getElementById("path");
-
-    path.innerHTML = "";
-
-    /*
-    15 x 15 visual grid
-    */
-
-    for(let r=0;r<15;r++){
-
-        for(let c=0;c<15;c++){
-
-            const cell = document.createElement("div");
-
-            cell.className = "cell";
-
-            /*
-            Outer path visual
-            */
-
-            const onPath =
-                (r===0 && c>=5 && c<=9) ||
-                (r===14 && c>=5 && c<=9) ||
-                (c===0 && r>=5 && r<=9) ||
-                (c===14 && r>=5 && r<=9) ||
-                (r===5 && c>=0 && c<=5) ||
-                (r===5 && c>=9 && c<=14) ||
-                (r===9 && c>=0 && c<=5) ||
-                (r===9 && c>=9 && c<=14);
-
-            if(onPath){
-
-                cell.style.background="#f8fafc";
-
-            }
-
-            /*
-            Start cells
-            */
-
-            if(r===0 && c===5){
-                cell.classList.add("redStart");
-            }
-
-            if(r===5 && c===14){
-                cell.classList.add("greenStart");
-            }
-
-            if(r===14 && c===9){
-                cell.classList.add("yellowStart");
-            }
-
-            if(r===9 && c===0){
-                cell.classList.add("blueStart");
-            }
-
-            path.appendChild(cell);
-
-        }
-
-    }
-
-}
-
-
-/* =====================================
-   TURN DISPLAY
-===================================== */
-
-function updateTurn(){
-
-    const p = players[currentPlayer];
-
-    document.getElementById("playerName").innerText =
-        p.name;
-
-    document.getElementById("turn").innerText =
-        p.emoji+" "+p.name+" की बारी";
-
-}
-
-
-/* =====================================
-   GLOBAL POSITION
-===================================== */
-
-function getGlobalPosition(player,step){
-
-    return (
-        players[player].start + step
-    ) % 52;
-
-}
-
-
-/* =====================================
-   GET COORDINATE
-===================================== */
-
-function getBoardCoordinate(player,step){
-
-    const global =
-        getGlobalPosition(player,step);
-
-    /*
-    हमारे logical route को player start
-    के हिसाब से घुमाया जाता है।
-    */
-
-    const base =
-        logicalRoute[global];
-
-    return base;
-
-}
-
-
-/* =====================================
-   HOME POSITIONS
-===================================== */
-
-const homePositions = [
-
-[
-    [8,8],
-    [16,8],
-    [8,16],
-    [16,16]
+[7,2],
+[7,3],
+[7,4],
+[7,5],
+[7,6]
 ],
 
 [
-    [84,8],
-    [92,8],
-    [84,16],
-    [92,16]
+[13,7],
+[12,7],
+[11,7],
+[10,7],
+[9,7],
+[8,7]
 ],
 
 [
-    [8,84],
-    [16,84],
-    [8,92],
-    [16,92]
-],
-
-[
-    [84,84],
-    [92,84],
-    [84,92],
-    [92,92]
+[7,13],
+[7,12],
+[7,11],
+[7,10],
+[7,9],
+[7,8]
 ]
 
 ];
 
 
-/* =====================================
-   GET LEGAL MOVES
-===================================== */
+/* =====================================================
+   GAME STATE
 
-function getLegalPieces(){
+   -1 = HOME/घर
+    0 = starting square
+    1..51 = outer track
+   52..57 = player's home lane
+   58 = finished HOME
+===================================================== */
 
-    const legal = [];
+let currentPlayer=0;
+let diceValue=0;
+let waitingForPiece=false;
+let moving=false;
+let winner=false;
+let score=0;
 
-    for(let token=0;token<4;token++){
-
-        const pos =
-            positions[currentPlayer][token];
-
-        /*
-        घर में है
-        */
-
-        if(pos===-1){
-
-            /*
-            केवल 6 पर बाहर
-            */
-
-            if(diceValue===6){
-
-                legal.push(token);
-
-            }
-
-            continue;
-        }
+let positions=[
+[-1,-1,-1,-1],
+[-1,-1,-1,-1],
+[-1,-1,-1,-1],
+[-1,-1,-1,-1]
+];
 
 
-        /*
-        HOME पहुँच चुकी है
-        */
+/* =====================================================
+   HOME PIECE POSITIONS
+===================================================== */
 
-        if(pos===56){
+const homePositions=[
 
-            continue;
+[
+[8,8],
+[16,8],
+[8,16],
+[16,16]
+],
 
-        }
+[
+[84,8],
+[92,8],
+[84,16],
+[92,16]
+],
+
+[
+[8,84],
+[16,84],
+[8,92],
+[16,92]
+],
+
+[
+[84,84],
+[92,84],
+[84,92],
+[92,92]
+]
+
+];
 
 
-        /*
-        exact finish
-        */
+/* =====================================================
+   CREATE BOARD
+===================================================== */
 
-        if(pos + diceValue <= 56){
+function createBoard(){
 
-            legal.push(token);
+const grid=document.getElementById("grid");
 
-        }
+grid.innerHTML="";
 
-    }
+for(let r=0;r<15;r++){
 
-    return legal;
+for(let c=0;c<15;c++){
+
+const cell=document.createElement("div");
+
+cell.className="cell";
+
+const trackIndex=
+track.findIndex(
+x=>x[0]===r && x[1]===c
+);
+
+if(trackIndex!==-1){
+
+cell.classList.add("routeCell");
+
+cell.innerText=
+trackIndex+1;
+
+if(trackIndex===0)
+cell.classList.add("redStart");
+
+if(trackIndex===13)
+cell.classList.add("greenStart");
+
+if(trackIndex===26)
+cell.classList.add("yellowStart");
+
+if(trackIndex===39)
+cell.classList.add("blueStart");
+
+if(safeCells.includes(trackIndex)){
+cell.classList.add("safe");
+cell.innerText="★";
+}
 
 }
 
 
-/* =====================================
-   ROLL DICE
-===================================== */
+/* HOME LANES */
+
+for(let p=0;p<4;p++){
+
+for(let i=0;i<6;i++){
+
+const xy=homeLanes[p][i];
+
+if(xy[0]===r && xy[1]===c){
+
+cell.classList.add(
+p===0?"redLane":
+p===1?"greenLane":
+p===2?"yellowLane":
+"blueLane"
+);
+
+}
+
+}
+
+}
+
+
+grid.appendChild(cell);
+
+}
+
+}
+
+}
+
+
+/* =====================================================
+   GLOBAL TRACK POSITION
+===================================================== */
+
+function globalPosition(player,step){
+
+return(
+players[player].start+step
+)%52;
+
+}
+
+
+/* =====================================================
+   GET COORDINATE
+===================================================== */
+
+function getCoordinate(player,position){
+
+/*
+0-51 = outer track
+52-57 = home lane
+*/
+
+if(position>=52 && position<=57){
+
+return homeLanes[player][position-52];
+
+}
+
+const global=
+globalPosition(player,position);
+
+return track[global];
+
+}
+
+
+/* =====================================================
+   LEGAL MOVES
+===================================================== */
+
+function legalPieces(){
+
+const list=[];
+
+for(let t=0;t<4;t++){
+
+const pos=
+positions[currentPlayer][t];
+
+/* HOME */
+
+if(pos===-1){
+
+if(diceValue===6){
+list.push(t);
+}
+
+continue;
+}
+
+
+/* FINISHED */
+
+if(pos===58){
+continue;
+}
+
+
+/* NORMAL */
+
+if(pos+diceValue<=58){
+
+list.push(t);
+
+}
+
+}
+
+return list;
+
+}
+
+
+/* =====================================================
+   ROLL
+===================================================== */
 
 function rollDice(){
 
-    if(moving || winner){
+if(moving || winner)
+return;
 
-        return;
+if(waitingForPiece){
 
-    }
+document.getElementById("message").innerText=
+"पहले अपनी गोटी चुनें।";
 
-    if(waitingForPiece){
+return;
 
-        document.getElementById("message").innerText =
-            "पहले अपनी गोटी चुनिए।";
+}
 
-        return;
+diceValue=
+Math.floor(Math.random()*6)+1;
 
-    }
+document.getElementById("dice").innerText=
+diceFaces[diceValue-1];
 
+const legal=legalPieces();
 
-    diceValue =
-        Math.floor(Math.random()*6)+1;
-
-
-    document.getElementById("dice").innerText =
-        diceFaces[diceValue-1];
-
-
-    const p = players[currentPlayer];
+const p=players[currentPlayer];
 
 
-    const legal =
-        getLegalPieces();
+/*
+NO MOVE
+*/
 
+if(legal.length===0){
 
-    if(legal.length===0){
+document.getElementById("message").innerText=
+p.emoji+" "+p.name+
+" की कोई valid चाल नहीं है।";
 
-        document.getElementById("message").innerText =
-            p.emoji+" "+p.name+
-            " की कोई valid चाल नहीं है।";
+if(diceValue!==6){
 
+setTimeout(nextPlayer,1000);
 
-        /*
-        6 पर भी कोई गोटी चलने योग्य नहीं है
-        तो अगली बारी
-        */
+}
 
-        if(diceValue!==6){
-
-            setTimeout(nextPlayer,1000);
-
-        }
-
-        return;
-
-    }
-
-
-    waitingForPiece = true;
-
-
-    highlightPieces(legal);
-
-
-    if(diceValue===6){
-
-        document.getElementById("message").innerText =
-            p.emoji+
-            " 6 आया! गोटी चुनिए।";
-
-    }else{
-
-        document.getElementById("message").innerText =
-            p.emoji+
-            " "+diceValue+
-            " खाने चलाने के लिए गोटी चुनिए।";
-
-    }
+return;
 
 }
 
 
-/* =====================================
-   HIGHLIGHT VALID PIECES
-===================================== */
+waitingForPiece=true;
 
-function highlightPieces(legal){
+highlightPieces(legal);
 
-    document.querySelectorAll(".piece")
-    .forEach(piece=>{
-
-        piece.classList.remove("selectable");
-
-        const p =
-            Number(piece.dataset.player);
-
-        const t =
-            Number(piece.dataset.token);
-
-
-        if(
-            p===currentPlayer &&
-            legal.includes(t)
-        ){
-
-            piece.classList.add("selectable");
-
-        }
-
-    });
+document.getElementById("message").innerText=
+p.emoji+" "+p.name+
+" — "+diceValue+
+" आया। पीली outline वाली गोटी चुनें।";
 
 }
 
 
-/* =====================================
+/* =====================================================
+   HIGHLIGHT
+===================================================== */
+
+function highlightPieces(list){
+
+document.querySelectorAll(".piece")
+.forEach(piece=>{
+
+piece.classList.remove("selectable");
+
+const p=
+Number(piece.dataset.player);
+
+const t=
+Number(piece.dataset.token);
+
+if(
+p===currentPlayer &&
+list.includes(t)
+){
+
+piece.classList.add("selectable");
+
+}
+
+});
+
+}
+
+
+/* =====================================================
    MOVE PIECE
-===================================== */
+===================================================== */
 
 async function movePiece(player,token){
 
-    if(moving){
+if(moving)
+return;
 
-        return;
+if(!waitingForPiece)
+return;
 
-    }
+if(player!==currentPlayer)
+return;
 
-    if(!waitingForPiece){
+const legal=legalPieces();
 
-        document.getElementById("message").innerText =
-            "पहले Dice Roll करें।";
+if(!legal.includes(token))
+return;
 
-        return;
+moving=true;
 
-    }
+waitingForPiece=false;
 
-    if(player!==currentPlayer){
+document.querySelectorAll(".piece")
+.forEach(x=>{
+x.classList.remove("selectable");
+});
 
-        document.getElementById("message").innerText =
-            "अभी "+players[currentPlayer].name+
-            " की बारी है।";
 
-        return;
+const rolled=diceValue;
 
-    }
+let old=positions[player][token];
 
 
-    const legal =
-        getLegalPieces();
+/*
+=====================================================
+6 से HOME से START पर
+=====================================================
+*/
 
+if(old===-1){
 
-    if(!legal.includes(token)){
+positions[player][token]=0;
 
-        document.getElementById("message").innerText =
-            "यह गोटी अभी नहीं चल सकती।";
+renderTokens();
 
-        return;
+score+=10;
 
-    }
+document.getElementById("score").innerText=score;
 
+document.getElementById("message").innerText=
+"🎉 "+players[player].name+
+" की गोटी बाहर आ गई!";
 
-    moving = true;
-
-    waitingForPiece = false;
-
-
-    document.querySelectorAll(".piece")
-    .forEach(x=>{
-        x.classList.remove("selectable");
-    });
-
-
-    const oldPosition =
-        positions[player][token];
-
-
-    /*
-    6 पर घर से बाहर
-    */
-
-    if(oldPosition===-1){
-
-        positions[player][token] = 0;
-
-        score += 10;
-
-        document.getElementById("score").innerText =
-            score;
-
-        renderTokens();
-
-        document.getElementById("message").innerText =
-            "🎉 "+players[player].name+
-            " की गोटी घर से बाहर आ गई!";
-
-
-        await wait(500);
-
-    }
-
-
-    /*
-    अगर पहले से बाहर है
-    तो हर step को अलग-अलग चलाएं
-    */
-
-    else{
-
-        for(
-            let step=1;
-            step<=diceValue;
-            step++
-        ){
-
-            positions[player][token] =
-                oldPosition + step;
-
-
-            renderTokens();
-
-
-            document.getElementById("message").innerText =
-                players[player].emoji+
-                " गोटी चल रही है... "+
-                step+" / "+diceValue;
-
-
-            /*
-            हर खाने पर रुकना
-            */
-
-            await wait(230);
-
-        }
-
-
-        score += diceValue;
-
-        document.getElementById("score").innerText =
-            score;
-
-    }
-
-
-    const finalPosition =
-        positions[player][token];
-
-
-    /*
-    HOME
-    */
-
-    if(finalPosition===56){
-
-        document.getElementById("message").innerText =
-            "🏆 "+players[player].name+
-            " की गोटी HOME पहुँच गई!";
-
-        score += 25;
-
-        document.getElementById("score").innerText =
-            score;
-
-    }
-
-
-    /*
-    CAPTURE
-    */
-
-    if(
-        finalPosition>=0 &&
-        finalPosition<52
-    ){
-
-        capturePieces(
-            player,
-            token
-        );
-
-    }
-
-
-    /*
-    WIN CHECK
-    */
-
-    const homeCount =
-        positions[player]
-        .filter(x=>x===56)
-        .length;
-
-
-    if(homeCount===4){
-
-        winner = true;
-
-        document.getElementById("message").innerText =
-            "🏆🎉 "+players[player].name+
-            " PLAYER जीत गया!";
-
-        document.getElementById("rollBtn").disabled =
-            true;
-
-        renderTokens();
-
-        moving=false;
-
-        return;
-
-    }
-
-
-    /*
-    6 = EXTRA TURN
-    */
-
-    const six =
-        diceValue===6;
-
-
-    diceValue=0;
-
-    document.getElementById("dice").innerText =
-        "🎲";
-
-
-    moving=false;
-
-
-    if(six){
-
-        document.getElementById("message").innerText =
-            "🎲 6 आया था — "+
-            players[player].name+
-            " को फिर से मौका!";
-
-        return;
-
-    }
-
-
-    /*
-    अगला खिलाड़ी
-    */
-
-    setTimeout(nextPlayer,700);
+await wait(500);
 
 }
 
 
-/* =====================================
-   WAIT
-===================================== */
+/*
+=====================================================
+NORMAL SEQUENTIAL MOVEMENT
+=====================================================
+*/
 
-function wait(ms){
+else{
 
-    return new Promise(resolve=>{
+for(let i=1;i<=rolled;i++){
 
-        setTimeout(resolve,ms);
+positions[player][token]=
+old+i;
 
-    });
+renderTokens();
+
+document.getElementById("message").innerText=
+players[player].emoji+
+" गोटी चल रही है: "+
+i+" / "+rolled;
+
+await wait(230);
+
+}
+
+score+=rolled;
+
+document.getElementById("score").innerText=score;
 
 }
 
 
-/* =====================================
+/*
+=====================================================
+HOME CHECK
+=====================================================
+*/
+
+if(
+positions[player][token]===58
+){
+
+score+=50;
+
+document.getElementById("score").innerText=score;
+
+document.getElementById("message").innerText=
+"🏠🏆 गोटी HOME पहुँच गई!";
+
+}
+
+
+/*
+=====================================================
+CAPTURE
+=====================================================
+*/
+
+if(
+positions[player][token]>=0 &&
+positions[player][token]<52
+){
+
+capture(player,token);
+
+}
+
+
+/*
+=====================================================
+WIN
+=====================================================
+*/
+
+const finished=
+positions[player]
+.filter(x=>x===58)
+.length;
+
+if(finished===4){
+
+winner=true;
+
+renderTokens();
+
+document.getElementById("message").innerText=
+"🏆🎉 "+players[player].name+
+" ने गेम जीत लिया!";
+
+document.getElementById("rollBtn").disabled=true;
+
+moving=false;
+
+return;
+
+}
+
+
+/*
+=====================================================
+6 = EXTRA TURN
+=====================================================
+*/
+
+diceValue=0;
+
+document.getElementById("dice").innerText="🎲";
+
+moving=false;
+
+if(rolled===6){
+
+document.getElementById("message").innerText=
+"🎲 6 आया — "+players[player].name+
+" को फिर से मौका!";
+
+return;
+
+}
+
+
+/*
+NEXT PLAYER
+*/
+
+setTimeout(nextPlayer,700);
+
+}
+
+
+/* =====================================================
    CAPTURE
-===================================== */
+===================================================== */
 
-function capturePieces(player,token){
+function capture(player,token){
 
-    const position =
-        positions[player][token];
+const pos=
+positions[player][token];
 
+if(pos<0 || pos>=52)
+return;
 
-    /*
-    Safe positions
-    */
-
-    const safePositions =
-        [0,8,13,21,26,34,39,47];
+const global=
+globalPosition(player,pos);
 
 
-    if(safePositions.includes(
-        getGlobalPosition(player,position)
-    )){
+/*
+SAFE
+*/
 
-        return;
-
-    }
-
-
-    for(let p=0;p<4;p++){
-
-        if(p===player){
-
-            continue;
-
-        }
+if(safeCells.includes(global))
+return;
 
 
-        for(let t=0;t<4;t++){
+for(let p=0;p<4;p++){
 
-            const other =
-                positions[p][t];
+if(p===player)
+continue;
 
+for(let t=0;t<4;t++){
 
-            if(
-                other>=0 &&
-                other<52
-            ){
+const other=
+positions[p][t];
 
-                const otherGlobal =
-                    getGlobalPosition(
-                        p,
-                        other
-                    );
+if(other<0 || other>=52)
+continue;
 
+const otherGlobal=
+globalPosition(p,other);
 
-                const myGlobal =
-                    getGlobalPosition(
-                        player,
-                        position
-                    );
+if(otherGlobal===global){
 
+positions[p][t]=-1;
 
-                if(otherGlobal===myGlobal){
+score+=20;
 
-                    positions[p][t] = -1;
+document.getElementById("score").innerText=score;
 
-                    score += 20;
+document.getElementById("message").innerText=
+"💥 "+players[player].name+
+" ने "+players[p].name+
+" की गोटी काट दी!";
 
-                    document.getElementById("score")
-                    .innerText = score;
+}
 
+}
 
-                    document.getElementById("message")
-                    .innerText =
-                        "💥 "+players[player].name+
-                        " ने "+
-                        players[p].name+
-                        " की गोटी काट दी!";
-
-                }
-
-            }
-
-        }
-
-    }
+}
 
 }
 
 
-/* =====================================
-   RENDER PIECES
-===================================== */
+/* =====================================================
+   RENDER
+===================================================== */
 
 function renderTokens(){
 
-    document.querySelectorAll(".piece")
-    .forEach(x=>x.remove());
+document.querySelectorAll(".piece")
+.forEach(x=>x.remove());
 
+const occupied={};
 
-    const occupied = {};
+for(let p=0;p<4;p++){
 
+for(let t=0;t<4;t++){
 
-    for(let p=0;p<4;p++){
+const pos=
+positions[p][t];
 
-        for(let t=0;t<4;t++){
+const piece=
+document.createElement("div");
 
-            const pos =
-                positions[p][t];
+piece.className=
+"piece "+players[p].color;
 
+piece.dataset.player=p;
+piece.dataset.token=t;
 
-            const piece =
-                document.createElement("div");
+piece.innerText=t+1;
 
+piece.onclick=
+()=>movePiece(p,t);
 
-            piece.className =
-                "piece "+players[p].color;
 
+/*
+HOME
+*/
 
-            piece.dataset.player = p;
+if(pos===-1){
 
-            piece.dataset.token = t;
+const hp=
+homePositions[p][t];
 
-            piece.innerText = t+1;
+piece.style.left=
+hp[0]+"%";
 
-
-            piece.onclick = function(){
-
-                movePiece(p,t);
-
-            };
-
-
-            /*
-            HOME / बाहर
-            */
-
-            if(pos===-1 || pos===56){
-
-                const hp =
-                    homePositions[p][t];
-
-
-                piece.style.left =
-                    hp[0]+"%";
-
-                piece.style.top =
-                    hp[1]+"%";
-
-            }
-
-
-            /*
-            PATH
-            */
-
-            else{
-
-                const coordinate =
-                    getBoardCoordinate(
-                        p,
-                        pos
-                    );
-
-
-                const r =
-                    coordinate[0];
-
-                const c =
-                    coordinate[1];
-
-
-                /*
-                board percentage
-                */
-
-                let left =
-                    (c/14)*100;
-
-                let top =
-                    (r/14)*100;
-
-
-                /*
-                अगर एक ही खाने में कई गोटियाँ हैं
-                */
-
-                const key =
-                    Math.round(left)+
-                    "_"+
-                    Math.round(top);
-
-
-                if(
-                    occupied[key]===undefined
-                ){
-
-                    occupied[key]=0;
-
-                }
-
-
-                const index =
-                    occupied[key]++;
-
-
-                /*
-                छोटे अलग offsets
-                */
-
-                const offsets = [
-
-                    [0,0],
-                    [3,0],
-                    [0,3],
-                    [3,3]
-
-                ];
-
-
-                left +=
-                    offsets[index%4][0];
-
-
-                top +=
-                    offsets[index%4][1];
-
-
-                piece.style.left =
-                    "calc("+left+"% - 14px)";
-
-                piece.style.top =
-                    "calc("+top+"% - 14px)";
-
-            }
-
-
-            /*
-            VALID MOVE HIGHLIGHT
-            */
-
-            if(
-                waitingForPiece &&
-                p===currentPlayer &&
-                getLegalPieces().includes(t)
-            ){
-
-                piece.classList.add("selectable");
-
-            }
-
-
-            document
-            .getElementById("board")
-            .appendChild(piece);
-
-        }
-
-    }
+piece.style.top=
+hp[1]+"%";
 
 }
 
 
-/* =====================================
+/*
+FINISHED
+*/
+
+else if(pos===58){
+
+const hp=
+homePositions[p][t];
+
+piece.style.left=
+hp[0]+"%";
+
+piece.style.top=
+hp[1]+"%";
+
+piece.style.boxShadow=
+"0 0 0 4px #facc15,0 3px 7px #0009";
+
+}
+
+
+/*
+ON BOARD
+*/
+
+else{
+
+const xy=
+getCoordinate(p,pos);
+
+let left=
+(xy[1]/15)*100;
+
+let top=
+(xy[0]/15)*100;
+
+const key=
+Math.round(left)+"_"+Math.round(top);
+
+if(occupied[key]===undefined)
+occupied[key]=0;
+
+const index=
+occupied[key]++;
+
+const offsets=[
+[0,0],
+[2.5,0],
+[0,2.5],
+[2.5,2.5]
+];
+
+left+=offsets[index%4][0];
+top+=offsets[index%4][1];
+
+piece.style.left=
+"calc("+left+"% - 14px)";
+
+piece.style.top=
+"calc("+top+"% - 14px");
+
+}
+
+
+/*
+SELECTABLE
+*/
+
+if(
+waitingForPiece &&
+p===currentPlayer &&
+legalPieces().includes(t)
+){
+
+piece.classList.add("selectable");
+
+}
+
+
+document
+.getElementById("board")
+.appendChild(piece);
+
+}
+
+}
+
+}
+
+
+/* =====================================================
    NEXT PLAYER
-===================================== */
+===================================================== */
 
 function nextPlayer(){
 
-    if(winner){
+if(winner)
+return;
 
-        return;
+waitingForPiece=false;
 
-    }
+diceValue=0;
 
+currentPlayer=
+(currentPlayer+1)%4;
 
-    waitingForPiece=false;
+updateTurn();
 
-    diceValue=0;
+document.getElementById("dice")
+.innerText="🎲";
 
-
-    document.querySelectorAll(".piece")
-    .forEach(x=>{
-        x.classList.remove("selectable");
-    });
-
-
-    currentPlayer =
-        (currentPlayer+1)%4;
-
-
-    updateTurn();
-
-
-    document.getElementById("dice")
-    .innerText="🎲";
-
-
-    document.getElementById("message")
-    .innerText =
-        players[currentPlayer].emoji+
-        " "+players[currentPlayer].name+
-        " की बारी। Dice Roll करें।";
+document.getElementById("message").innerText=
+players[currentPlayer].emoji+
+" "+players[currentPlayer].name+
+" की बारी। Dice Roll करें।";
 
 }
 
 
-/* =====================================
+/* =====================================================
+   TURN UI
+===================================================== */
+
+function updateTurn(){
+
+const p=
+players[currentPlayer];
+
+document.getElementById("playerName")
+.innerText=p.name;
+
+document.getElementById("turn")
+.innerText=
+p.emoji+" "+p.name+" Player की बारी";
+
+}
+
+
+/* =====================================================
    NEW GAME
-===================================== */
+===================================================== */
 
 function newGame(){
 
-    currentPlayer=0;
+currentPlayer=0;
 
-    diceValue=0;
+diceValue=0;
 
-    waitingForPiece=false;
+waitingForPiece=false;
 
-    moving=false;
+moving=false;
 
-    winner=false;
+winner=false;
 
-    score=0;
+score=0;
 
+positions=[
+[-1,-1,-1,-1],
+[-1,-1,-1,-1],
+[-1,-1,-1,-1],
+[-1,-1,-1,-1]
+];
 
-    positions=[
+document.getElementById("score")
+.innerText="0";
 
-        [-1,-1,-1,-1],
+document.getElementById("dice")
+.innerText="🎲";
 
-        [-1,-1,-1,-1],
+document.getElementById("rollBtn")
+.disabled=false;
 
-        [-1,-1,-1,-1],
+document.getElementById("message")
+.innerText=
+"नया गेम शुरू हो गया! Dice Roll करें।";
 
-        [-1,-1,-1,-1]
+updateTurn();
 
-    ];
-
-
-    document.getElementById("score")
-    .innerText="0";
-
-
-    document.getElementById("dice")
-    .innerText="🎲";
-
-
-    document.getElementById("rollBtn")
-    .disabled=false;
-
-
-    document.getElementById("message")
-    .innerText =
-        "नया गेम शुरू हो गया! Dice Roll करें।";
-
-
-    updateTurn();
-
-    renderTokens();
+renderTokens();
 
 }
 
 
-/* =====================================
+/* =====================================================
+   DAILY BONUS
+===================================================== */
+
+function dailyBonus(){
+
+const today=
+new Date().toDateString();
+
+const last=
+localStorage.getItem("mrLudoBonus");
+
+if(last===today){
+
+document.getElementById("message").innerText=
+"🎁 आज का Bonus पहले ही ले चुके हैं।";
+
+return;
+
+}
+
+localStorage.setItem(
+"mrLudoBonus",
+today
+);
+
+score+=100;
+
+document.getElementById("score")
+.innerText=score;
+
+document.getElementById("message")
+.innerText=
+"🎁 Daily Bonus +100 मिला!";
+
+}
+
+
+/* =====================================================
+   REFERRAL
+===================================================== */
+
+function makeReferral(){
+
+let code=
+localStorage.getItem("mrLudoReferral");
+
+if(!code){
+
+code=
+"MRLUDO-"+
+Math.random()
+.toString(36)
+.substring(2,8)
+.toUpperCase();
+
+localStorage.setItem(
+"mrLudoReferral",
+code
+);
+
+}
+
+return code;
+
+}
+
+document.getElementById("refCode")
+.innerText=
+makeReferral();
+
+
+/* =====================================================
+   ROOM SYSTEM - LOCAL DEMO
+===================================================== */
+
+function createRoom(){
+
+const code=
+"MR"+
+Math.random()
+.toString(36)
+.substring(2,7)
+.toUpperCase();
+
+document.getElementById("roomCode")
+.value=code;
+
+localStorage.setItem(
+"mrLudoRoom",
+code
+);
+
+document.getElementById("message")
+.innerText=
+"👥 Room बन गया: "+code+
+" — Friend को code भेजें।";
+
+}
+
+
+function joinRoom(){
+
+const code=
+document.getElementById("roomCode")
+.value
+.trim()
+.toUpperCase();
+
+if(!code){
+
+document.getElementById("message")
+.innerText=
+"पहले Room Code डालें।";
+
+return;
+
+}
+
+document.getElementById("message")
+.innerText=
+"👥 Room "+code+
+" join करने की request तैयार है।";
+
+}
+
+
+/* =====================================================
+   UTILITY
+===================================================== */
+
+function wait(ms){
+
+return new Promise(
+resolve=>setTimeout(resolve,ms)
+);
+
+}
+
+
+/* =====================================================
    START
-===================================== */
+===================================================== */
 
 createBoard();
 

@@ -655,17 +655,17 @@ updateTurn();
 
 }
 
-document.querySelectorAll(".token")
-.forEach(token=>{
+document.querySelectorAll(".token").forEach(token => {
 
-token.addEventListener("click",function(){
+  token.addEventListener("click", function () {
 
-const player=parseInt(this.dataset.player);
-const number=parseInt(this.dataset.token);
+    const player = parseInt(this.dataset.player);
+    const number = parseInt(this.dataset.token);
 
-moveToken(player,number);
+    moveToken(player, number);
 
-});
+  });
+
 
 });
 

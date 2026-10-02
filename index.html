@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>फुल्ली फंक्शनल लूडो गेम</title>
+    <title>A to Z फुल्ली फंक्शनल लूडो गेम</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -37,40 +37,40 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
-            min-width: 200px;
+            min-width: 220px;
         }
         .status-box {
             font-size: 18px;
             font-weight: bold;
-            padding: 10px 20px;
+            padding: 15px;
             border-radius: 8px;
             background: #4a5568;
             text-align: center;
             width: 100%;
+            border-left: 5px solid #ed8936;
         }
         .dice-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
         .dice {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             background: #fff;
             color: #000;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 36px;
             font-weight: bold;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.4);
-            transition: transform 0.1s ease;
         }
         button {
-            padding: 12px 24px;
-            font-size: 16px;
+            padding: 12px 30px;
+            font-size: 18px;
             font-weight: bold;
             background: #ed8936;
             color: white;
@@ -78,30 +78,29 @@
             border-radius: 8px;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            transition: all 0.2s ease;
+            width: 100%;
         }
-        button:hover { background: #dd6b20; transform: translateY(-2px); }
-        button:active { transform: translateY(0); }
+        button:hover { background: #dd6b20; }
         button:disabled { background: #a0aec0; cursor: not-allowed; }
         .instructions {
             margin-top: 15px;
             font-size: 14px;
             color: #cbd5e0;
             text-align: center;
-            max-width: 500px;
+            max-width: 600px;
             line-height: 1.5;
         }
     </style>
 </head>
 <body>
 
-<h1>मल्टीप्लेयर लूडो (Full Engine)</h1>
+<h1>मल्टीप्लेयर लूडो (पूर्ण गेम इंजन)</h1>
 
 <div class="game-layout">
-    <!-- लूडो इंजन रेंडरिंग बोर्ड -->
+    <!-- लूडो ग्राफिक्स बोर्ड -->
     <canvas id="ludoCanvas" width="600" height="600"></canvas>
 
-    <!-- कंट्रोल और स्टेटस पैनल -->
+    <!-- कंट्रोल पैनल -->
     <div class="panel">
         <div class="status-box" id="statusPanel">खेल शुरू करें!</div>
         <div class="dice-container">
@@ -112,151 +111,154 @@
 </div>
 
 <div class="instructions">
-    <strong>नियम:</strong> पासे में <b>6</b> आने पर ही गोटी घर से बाहर निकलेगी। गोटी चलने के लिए पासा रोल करने के बाद बोर्ड पर मौजूद अपनी गोटी पर क्लिक करें। 6 आने पर या विरोधी की गोटी काटने पर दोबारा चांस मिलेगा!
+    <strong>नियम:</strong> पासे में <b>6</b> आने पर ही गोटी घर से बाहर (Unlock) निकलेगी। पासा रोल करने के बाद बोर्ड पर मौजूद अपनी गोटी पर क्लिक करके उसे आगे बढ़ाएं। 6 आने पर या विरोधी की गोटी काटने पर आपको **दोबारा चांस** मिलेगा!
 </div>
 
 <script>
 const canvas = document.getElementById('ludoCanvas');
 const ctx = canvas.getContext('2d');
-const S = 600; // बोर्ड साइज
-const C = S / 15; // प्रत्येक सेल साइज (40px)
+const S = 600; // बोर्ड का साइज
+const C = S / 15; // 40px प्रति बॉक्स
 
-// प्लेयर्स कॉन्फ़िगरेशन
 const COLORS = { 0: '#e74c3c', 1: '#2ecc71', 2: '#f1c40f', 3: '#3498db' }; // लाल, हरा, पीला, नीला
 const PLAYER_NAMES = ['लाल (Red)', 'हरा (Green)', 'पीला (Yellow)', 'नीला (Blue)'];
 
-// पूरे 52 खानों के ट्रैक का मैप (X, Y ग्रिड कोऑर्डिनेट्स)
+// पूरे लूडो ट्रैक के 52 खानों के ग्रिड कोऑर्डिनेट्स (X, Y)
 const TRACK = [
-    [1,6],[2,6],[3,6],[4,6],[5,6],
-    [6,5],[6,4],[6,3],[6,2],[6,1],[6,0],[7,0],[8,0],
-    [8,1],[8,2],[8,3],[8,4],[8,5],[9,6],[10,6],[11,6],[12,6],[13,6],[14,6],[14,7],[14,8],
-    [13,8],[12,8],[11,8],[10,8],[9,8],
-    [8,9],[8,10],[8,11],[8,12],[8,13],[8,14],[7,14],[6,14],
-    [6,13],[6,12],[6,11],[6,10],[6,9],[5,8],[4,8],[3,8],[2,8],[1,8],[0,8],[0,7],[0,6]
+    {x:1,y:6}, {x:2,y:6}, {x:3,y:6}, {x:4,y:6}, {x:5,y:6},
+    {x:6,y:5}, {x:6,y:4}, {x:6,y:3}, {x:6,y:2}, {x:6,y:1}, {x:6,y:0},
+    {x:7,y:0}, {x:8,y:0},
+    {x:8,y:1}, {x:8,y:2}, {x:8,y:3}, {x:8,y:4}, {x:8,y:5},
+    {x:9,y:6}, {x:10,y:6}, {x:11,y:6}, {x:12,y:6}, {x:13,y:6}, {x:14,y:6},
+    {x:14,y:7}, {x:14,y:8},
+    {x:13,y:8}, {x:12,y:8}, {x:11,y:8}, {x:10,y:8}, {x:9,y:8},
+    {x:8,y:9}, {x:8,y:10}, {x:8,y:11}, {x:8,y:12}, {x:8,y:13}, {x:8,y:14},
+    {x:7,y:14}, {x:6,y:14},
+    {x:6,y:13}, {x:6,y:12}, {x:6,y:11}, {x:6,y:10}, {x:6,y:9},
+    {x:5,y:8}, {x:4,y:8}, {x:3,y:8}, {x:2,y:8}, {x:1,y:8}, {x:0,y:8},
+    {x:0,y:7}, {x:0,y:6}
 ];
 
-// प्रत्येक खिलाड़ी का शुरुआती पॉइंट (TRACK इंडेक्स), होम पाथ एंट्री और होम सेल्स इंडेक्स
+// प्रत्येक खिलाड़ी की होम एंट्री, बेस लोकेशन और अंदर का रास्ता
 const PLAYER_CONFIG = [
-    { startTrack: 0,  homeEntry: 50, homeCells: [[1,7],[2,7],[3,7],[4,7],[5,7]], basePos: [[2,2],[3,2],[2,3],[3,3]] }, // Red
-    { startTrack: 13, homeEntry: 11, homeCells: [[7,1],[7,2],[7,3],[7,4],[7,5]], basePos: [[11,2],[12,2],[11,3],[12,3]] }, // Green
-    { startTrack: 26, homeEntry: 24, homeCells: [[13,7],[12,7],[11,7],[10,7],[9,7]], basePos: [[11,11],[12,11],[11,12],[12,12]] }, // Yellow
-    { startTrack: 39, homeEntry: 37, homeCells: [[7,13],[7,12],[7,11],[7,10],[7,9]], basePos: [[2,11],[3,11],[2,12],[3,12]] }  // Blue
+    // 0: Red
+    { startTrack: 0, homeEntry: 50, basePos: [{x:1.5,y:1.5},{x:3.5,y:1.5},{x:1.5,y:3.5},{x:3.5,y:3.5}], homeCells: [{x:1,y:7},{x:2,y:7},{x:3,y:7},{x:4,y:7},{x:5,y:7}] },
+    // 1: Green
+    { startTrack: 13, homeEntry: 11, basePos: [{x:10.5,y:1.5},{x:12.5,y:1.5},{x:10.5,y:3.5},{x:12.5,y:3.5}], homeCells: [{x:7,y:1},{x:7,y:2},{x:7,y:3},{x:7,y:4},{x:7,y:5}] },
+    // 2: Yellow
+    { startTrack: 26, homeEntry: 24, basePos: [{x:10.5,y:10.5},{x:12.5,y:10.5},{x:10.5,y:12.5},{x:12.5,y:12.5}], homeCells: [{x:13,y:7},{x:12,y:7},{x:11,y:7},{x:10,y:7},{x:9,y:7}] },
+    // 3: Blue
+    { startTrack: 39, homeEntry: 37, basePos: [{x:1.5,y:10.5},{x:3.5,y:10.5},{x:1.5,y:12.5},{x:3.5,y:12.5}], homeCells: [{x:7,y:13},{x:7,y:12},{x:7,y:11},{x:7,y:10},{x:7,y:9}] }
 ];
 
 const SAFE_SECTIONS =; // सुरक्षित खाने (स्टार जोन)
 
-// गेम स्टेट वेरिएबल
 let gameState = {
     turn: 0,
     diceValue: 0,
     hasRolled: false,
     tokens: [
-        [-1, -1, -1, -1], // Red गोटियाँ (-1 मतलब बेस/घर के अंदर)
+        [-1, -1, -1, -1], // Red गोटियाँ (-1 = घर के अंदर लॉक)
         [-1, -1, -1, -1], // Green
         [-1, -1, -1, -1], // Yellow
         [-1, -1, -1, -1]  // Blue
-    ],
-    winners: []
+    ]
 };
 
-// बोर्ड को रेंडर (ड्रा) करने का मुख्य फंक्शन
+// पूरा लूडो बोर्ड डिजाइन ड्रा करना
 function drawBoard() {
     ctx.clearRect(0, 0, S, S);
 
-    // 1. बेस ग्रिड और पाथ की ड्राइंग
+    // 1. ग्रिड और चार बड़े घर बनाना
     for(let r=0; r<15; r++){
         for(let c=0; c<15; c++){
-            ctx.strokeStyle = '#ccc';
+            ctx.strokeStyle = '#cbd5e0';
             ctx.lineWidth = 1;
             ctx.fillStyle = '#fff';
             
-            // ब्याकग्राउंड कलरिंग नियम
-            if(r<6 && c<6) ctx.fillStyle = COLORS[0];
-            else if(r<6 && c>8) ctx.fillStyle = COLORS[1];
-            else if(r>8 && c>8) ctx.fillStyle = COLORS[2];
-            else if(r>8 && c<6) ctx.fillStyle = COLORS[3];
+            if(r<6 && c<6) ctx.fillStyle = COLORS[1]; // Green Base
+            else if(r<6 && c>8) ctx.fillStyle = COLORS[2]; // Yellow Base
+            else if(r>8 && c>8) ctx.fillStyle = COLORS[3]; // Blue Base
+            else if(r>8 && c<6) ctx.fillStyle = COLORS[0]; // Red Base
             
             ctx.fillRect(c*C, r*C, C, C);
             ctx.strokeRect(c*C, r*C, C, C);
         }
     }
 
-    // 2. होम पाथ (खिलाड़ियों के सुरक्षित गलियारे) को कलर करना
+    // 2. होम रन पाथ (गोटियों के रंगीन रास्ते)
     for(let p=0; p<4; p++) {
         PLAYER_CONFIG[p].homeCells.forEach(cell => {
             ctx.fillStyle = COLORS[p];
-            ctx.fillRect(cell[0]*C, cell[1]*C, C, C);
-            ctx.strokeRect(cell[0]*C, cell[1]*C, C, C);
+            ctx.fillRect(cell.x*C, cell.y*C, C, C);
+            ctx.strokeRect(cell.x*C, cell.y*C, C, C);
         });
-        // स्टार्टिंग पॉइंट हाइलाइटिंग
+        // शुरुआती बॉक्स हाइलाइट
         let startCell = TRACK[PLAYER_CONFIG[p].startTrack];
         ctx.fillStyle = COLORS[p];
-        ctx.fillRect(startCell[0]*C, startCell[1]*C, C, C);
-        ctx.strokeRect(startCell[0]*C, startCell[1]*C, C, C);
+        ctx.fillRect(startCell.x*C, startCell.y*C, C, C);
     }
 
-    // 3. सुरक्षित खानों (Safe Zones) पर स्टार चिन्ह बनाना
+    // 3. स्टार (सुरक्षित खाने) ड्रा करना
     SAFE_SECTIONS.forEach(idx => {
         let cell = TRACK[idx];
-        ctx.fillStyle = '#dfe6e9';
-        ctx.fillRect(cell[0]*C, cell[1]*C, C, C);
-        ctx.strokeRect(cell[0]*C, cell[1]*C, C, C);
-        ctx.fillStyle = '#2c3e50';
-        ctx.font = "20px Arial";
-        ctx.fillText("★", cell[0]*C + 10, cell[1]*C + 28);
+        ctx.fillStyle = '#edf2f7';
+        ctx.fillRect(cell.x*C, cell.y*C, C, C);
+        ctx.fillStyle = '#4a5568';
+        ctx.font = "22px Arial";
+        ctx.fillText("★", cell.x*C + 10, cell.y*C + 28);
     });
 
-    // 4. सेंटर होम ट्राएंगल्स (Center Target)
-    ctx.fillStyle = COLORS[0]; ctx.beginPath(); ctx.moveTo(6*C,6*C); ctx.lineTo(7.5*C,7.5*C); ctx.lineTo(6*C,9*C); ctx.fill();
-    ctx.fillStyle = COLORS[1]; ctx.beginPath(); ctx.moveTo(6*C,6*C); ctx.lineTo(7.5*C,7.5*C); ctx.lineTo(9*C,6*C); ctx.fill();
-    ctx.fillStyle = COLORS[2]; ctx.beginPath(); ctx.moveTo(9*C,6*C); ctx.lineTo(7.5*C,7.5*C); ctx.lineTo(9*C,9*C); ctx.fill();
-    ctx.fillStyle = COLORS[3]; ctx.beginPath(); ctx.moveTo(6*C,9*C); ctx.lineTo(7.5*C,7.5*C); ctx.lineTo(9*C,9*C); ctx.fill();
+    // 4. बीच का त्रिकोणीय एंड पॉइंट (Center Home)
+    ctx.fillStyle = COLORS[0]; ctx.beginPath(); ctx.moveTo(6*C,6*C); ctx.lineTo(7.5*C,7.5*C); ctx.lineTo(6*C,9*C); ctx.fill(); // Red
+    ctx.fillStyle = COLORS[1]; ctx.beginPath(); ctx.moveTo(6*C,6*C); ctx.lineTo(7.5*C,7.5*C); ctx.lineTo(9*C,6*C); ctx.fill(); // Green
+    ctx.fillStyle = COLORS[2]; ctx.beginPath(); ctx.moveTo(9*C,6*C); ctx.lineTo(7.5*C,7.5*C); ctx.lineTo(9*C,9*C); ctx.fill(); // Yellow
+    ctx.fillStyle = COLORS[3]; ctx.beginPath(); ctx.moveTo(6*C,9*C); ctx.lineTo(7.5*C,7.5*C); ctx.lineTo(9*C,9*C); ctx.fill(); // Blue
 
-    // 5. इनर बेस व्हाइट सर्कल्स (जहाँ गोटियाँ विश्राम करती हैं)
+    // 5. घरों के अंदर सफेद बॉक्स (जहाँ गोटियाँ बैठती हैं)
     for(let p=0; p<4; p++) {
         PLAYER_CONFIG[p].basePos.forEach(pos => {
             ctx.fillStyle = '#fff';
             ctx.beginPath();
-            ctx.arc(pos[0]*C + C/2, pos[1]*C + C/2, C/2.5, 0, 2*Math.PI);
+            ctx.arc(pos.x*C, pos.y*C, C/1.8, 0, 2*Math.PI);
             ctx.fill();
             ctx.stroke();
         });
     }
 
-    // 6. गोटियों (Tokens) को स्क्रीन पर दिखाना
+    // 6. गोटियाँ (Tokens) ड्रा करना
     for(let p=0; p<4; p++) {
         for(let t=0; t<4; t++) {
             let step = gameState.tokens[p][t];
             let x, y;
 
-            if(step === -1) { // बेस के अंदर
-                x = PLAYER_CONFIG[p].basePos[t][0]*C + C/2;
-                y = PLAYER_CONFIG[p].basePos[t][1]*C + C/2;
-            } else if(step >= 57) { // गोटी सेंट्रल होम के अंदर पहुँच गई
-                x = 7.5*C;
-                y = 7.5*C;
-            } else if(step >= 51) { // होम पाथ में आगे बढ़ रही है
+            if(step === -1) { // लॉक स्थिति में घर के अंदर
+                x = PLAYER_CONFIG[p].basePos[t].x * C;
+                y = PLAYER_CONFIG[p].basePos[t].y * C;
+            } else if(step >= 57) { // जीत की स्थिति (होम)
+                x = 7.5 * C;
+                y = 7.5 * C;
+            } else if(step >= 51) { // रंगीन होम गैलरी में
                 let cell = PLAYER_CONFIG[p].homeCells[step - 51];
-                x = cell[0]*C + C/2;
-                y = cell[1]*C + C/2;
-            } else { // सामान्य ट्रैक पर चल रही है
+                x = cell.x * C + C/2;
+                y = cell.y * C + C/2;
+            } else { // बाहर के रास्ते पर दौड़ते हुए
                 let trackIdx = (PLAYER_CONFIG[p].startTrack + step) % 52;
                 let cell = TRACK[trackIdx];
-                x = cell[0]*C + C/2;
-                y = cell[1]*C + C/2;
+                x = cell.x * C + C/2;
+                y = cell.y * C + C/2;
             }
 
-            // गोटियों की ओवरलैपिंग (एक ही खाने में कई गोटियाँ होने पर थोड़ा खिसकाना)
+            // अगर एक ही खाने में एक से ज़्यादा गोटियाँ हों तो ओवरलैप से बचाने के लिए थोड़ा खिसकाना
             let offset = t * 3 - 4;
             ctx.fillStyle = COLORS[p];
             ctx.beginPath();
-            ctx.arc(x + offset, y + offset, 12, 0, 2*Math.PI);
+            ctx.arc(x + offset, y + offset, 13, 0, 2*Math.PI);
             ctx.fill();
             ctx.strokeStyle = '#000';
             ctx.lineWidth = 2;
             ctx.stroke();
             
-            // आंतरिक कोर रिंग डिजाइन
             ctx.beginPath();
             ctx.arc(x + offset, y + offset, 6, 0, 2*Math.PI);
             ctx.strokeStyle = '#fff';
@@ -265,13 +267,8 @@ function drawBoard() {
     }
 }
 
-// पासा फेंकने का मैकेनिज्म (Dice Rolling Engine)
+// पासा फेंकना (Dice Roll Engine)
 function rollDice() {
     if(gameState.hasRolled) return;
 
     gameState.diceValue = Math.floor(Math.random() * 6) + 1;
-    document.getElementById('diceBox').innerText = gameState.diceValue;
-    gameState.hasRolled = true;
-
-    let p = gameState.turn;
-    let validMoves = 0;

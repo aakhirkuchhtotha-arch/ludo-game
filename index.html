@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MR Ludo - Free Online Ludo Game</title>
+<title>MR Ludo</title>
 
 <style>
 *{box-sizing:border-box}
@@ -12,33 +12,28 @@ body{
 margin:0;
 font-family:Arial,sans-serif;
 background:linear-gradient(135deg,#0f172a,#1e293b);
-color:#fff;
+color:white;
 text-align:center;
 }
 
-header{
-padding:18px 10px 5px;
-}
-
 h1{
-margin:0;
+margin:18px 0 4px;
 font-size:34px;
 }
 
 .subtitle{
 color:#cbd5e1;
-margin:6px 0 12px;
+margin-bottom:12px;
 }
 
 .game{
-width:min(96vw,620px);
+width:min(96vw,650px);
 margin:auto;
 padding:8px;
 }
 
 .info{
 display:flex;
-justify-content:space-between;
 gap:8px;
 margin:10px 0;
 }
@@ -52,24 +47,27 @@ font-weight:bold;
 }
 
 #turn{
-font-size:18px;
-margin:10px 0;
 color:#facc15;
+font-size:19px;
+margin:12px 0;
+font-weight:bold;
 }
 
 .board{
 position:relative;
-width:min(94vw,560px);
+width:min(94vw,600px);
 aspect-ratio:1;
-margin:12px auto;
-background:#fff;
-border:8px solid #fff;
-border-radius:8px;
+margin:auto;
+background:white;
+border:7px solid white;
+border-radius:10px;
 overflow:hidden;
-box-shadow:0 12px 35px #0009;
+box-shadow:0 15px 40px #0008;
 }
 
-.quad{
+/* HOME AREAS */
+
+.home{
 position:absolute;
 width:40%;
 height:40%;
@@ -83,31 +81,73 @@ justify-content:center;
 .yellowHome{left:0;bottom:0;background:#facc15}
 .blueHome{right:0;bottom:0;background:#3b82f6}
 
-.homeInner{
-width:65%;
-height:65%;
+.homeBox{
+width:70%;
+height:70%;
+background:white;
+border-radius:18px;
+display:grid;
+grid-template-columns:1fr 1fr;
+place-items:center;
+padding:12px;
+}
+
+.token{
+width:32px;
+height:32px;
+border-radius:50%;
+border:4px solid #555;
+box-shadow:0 2px 5px #0006;
+cursor:pointer;
+transition:.2s;
+}
+
+.token:hover{
+transform:scale(1.12);
+}
+
+.red{background:#dc2626}
+.green{background:#16a34a}
+.yellow{background:#eab308}
+.blue{background:#2563eb}
+
+/* PATH */
+
+.path{
+position:absolute;
 background:#fff;
-border-radius:20px;
+border:1px solid #aaa;
+display:grid;
+}
+
+.vertical{
+width:20%;
+height:60%;
+left:40%;
+top:20%;
+grid-template-columns:repeat(3,1fr);
+grid-template-rows:repeat(9,1fr);
+}
+
+.horizontal{
+width:60%;
+height:20%;
+left:20%;
+top:40%;
+grid-template-columns:repeat(9,1fr);
+grid-template-rows:repeat(3,1fr);
+}
+
+.cell{
+border:1px solid #aaa;
 display:flex;
 align-items:center;
 justify-content:center;
-flex-wrap:wrap;
-padding:10px;
-gap:8px;
+font-size:10px;
+color:#555;
 }
 
-.dot{
-width:25px;
-height:25px;
-border-radius:50%;
-background:#ddd;
-border:3px solid #777;
-}
-
-.redDot{background:#ef4444}
-.greenDot{background:#22c55e}
-.yellowDot{background:#facc15}
-.blueDot{background:#3b82f6}
+/* CENTER */
 
 .center{
 position:absolute;
@@ -127,264 +167,199 @@ justify-content:center;
 font-size:30px;
 }
 
-.track{
+/* MOVING TOKENS */
+
+.movingToken{
 position:absolute;
-left:40%;
-top:0;
-width:20%;
-height:40%;
-display:grid;
-grid-template-columns:repeat(3,1fr);
-grid-template-rows:repeat(6,1fr);
-background:#fff;
+width:27px;
+height:27px;
+border-radius:50%;
+border:3px solid white;
+box-shadow:0 2px 6px #0008;
+z-index:20;
+cursor:pointer;
+transition:.25s;
 }
 
-.track.bottom{
-top:60%;
-}
-
-.track.left{
-left:0;
-top:40%;
-width:40%;
-height:20%;
-grid-template-columns:repeat(6,1fr);
-grid-template-rows:repeat(3,1fr);
-}
-
-.track.right{
-left:60%;
-top:40%;
-width:40%;
-height:20%;
-grid-template-columns:repeat(6,1fr);
-grid-template-rows:repeat(3,1fr);
-}
-
-.square{
-border:1px solid #aaa;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:11px;
-color:#444;
-background:#fff;
-}
-
-.redPath{background:#fecaca}
-.greenPath{background:#bbf7d0}
-.yellowPath{background:#fef08a}
-.bluePath{background:#bfdbfe}
+/* CONTROLS */
 
 .controls{
+margin-top:15px;
 background:#1e293b;
 padding:18px;
 border-radius:18px;
-margin-top:14px;
 }
 
 .dice{
-font-size:72px;
-height:85px;
-line-height:85px;
+font-size:65px;
+height:75px;
+line-height:75px;
 }
 
 button{
 border:0;
-padding:14px 28px;
+padding:13px 25px;
 border-radius:30px;
-font-size:18px;
+font-size:17px;
 font-weight:bold;
 cursor:pointer;
 background:#facc15;
-color:#111827;
-margin:6px;
+margin:5px;
 }
 
 button:hover{
 filter:brightness(1.08);
 }
 
-button:disabled{
-opacity:.45;
-cursor:not-allowed;
-}
-
 #message{
-font-size:17px;
-min-height:25px;
+min-height:24px;
 margin:8px;
 color:#e2e8f0;
 }
 
 .players{
 display:grid;
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:1fr 1fr;
 gap:8px;
-margin-top:12px;
+margin-top:10px;
 }
 
 .player{
-padding:10px;
-border-radius:12px;
+padding:9px;
+border-radius:10px;
 font-weight:bold;
 }
 
-.p1{background:#dc2626}
-.p2{background:#16a34a}
-.p3{background:#ca8a04}
-.p4{background:#2563eb}
+.pRed{background:#dc2626}
+.pGreen{background:#16a34a}
+.pYellow{background:#ca8a04}
+.pBlue{background:#2563eb}
 
 .footer{
-margin:20px 0;
+margin:18px;
 color:#94a3b8;
 font-size:13px;
 }
 
 @media(max-width:430px){
 h1{font-size:28px}
-.dice{font-size:60px}
-button{width:90%;margin:5px auto}
+.token{width:26px;height:26px}
+.movingToken{width:23px;height:23px}
+button{width:90%}
 }
 </style>
 </head>
 
 <body>
 
-<header>
 <h1>🎲 MR Ludo</h1>
-<div class="subtitle">Free Online Ludo Game</div>
-</header>
+
+<div class="subtitle">
+Play Ludo Online
+</div>
 
 <div class="game">
 
 <div class="info">
-<div class="infoBox">🏆 Score<br><span id="score">0</span></div>
-<div class="infoBox">🎯 Turn<br><span id="playerName">Red</span></div>
+
+<div class="infoBox">
+🏆 Score<br>
+<span id="score">0</span>
 </div>
 
-<div id="turn">🔴 Red Player की बारी</div>
-
-<div class="board">
-
-<div class="quad redHome">
-<div class="homeInner">
-<div class="dot redDot"></div>
-<div class="dot redDot"></div>
-<div class="dot redDot"></div>
-<div class="dot redDot"></div>
-</div>
+<div class="infoBox">
+🎯 Turn<br>
+<span id="playerName">Red</span>
 </div>
 
-<div class="quad greenHome">
-<div class="homeInner">
-<div class="dot greenDot"></div>
-<div class="dot greenDot"></div>
-<div class="dot greenDot"></div>
-<div class="dot greenDot"></div>
-</div>
 </div>
 
-<div class="quad yellowHome">
-<div class="homeInner">
-<div class="dot yellowDot"></div>
-<div class="dot yellowDot"></div>
-<div class="dot yellowDot"></div>
-<div class="dot yellowDot"></div>
-</div>
+<div id="turn">
+🔴 Red Player की बारी
 </div>
 
-<div class="quad blueHome">
-<div class="homeInner">
-<div class="dot blueDot"></div>
-<div class="dot blueDot"></div>
-<div class="dot blueDot"></div>
-<div class="dot blueDot"></div>
-</div>
+<div class="board" id="board">
+
+<!-- RED HOME -->
+
+<div class="home redHome">
+
+<div class="homeBox">
+
+<div class="token red" data-player="0" data-token="0"></div>
+<div class="token red" data-player="0" data-token="1"></div>
+<div class="token red" data-player="0" data-token="2"></div>
+<div class="token red" data-player="0" data-token="3"></div>
+
 </div>
 
-<div class="track">
-<div class="square redPath">1</div>
-<div class="square">2</div>
-<div class="square greenPath">3</div>
-<div class="square">4</div>
-<div class="square">5</div>
-<div class="square greenPath">6</div>
-<div class="square redPath">7</div>
-<div class="square">8</div>
-<div class="square greenPath">9</div>
-<div class="square redPath">10</div>
-<div class="square">11</div>
-<div class="square greenPath">12</div>
-<div class="square redPath">13</div>
-<div class="square">14</div>
-<div class="square greenPath">15</div>
-<div class="square redPath">16</div>
-<div class="square">17</div>
-<div class="square greenPath">18</div>
 </div>
 
-<div class="track bottom">
-<div class="square yellowPath">19</div>
-<div class="square">20</div>
-<div class="square bluePath">21</div>
-<div class="square yellowPath">22</div>
-<div class="square">23</div>
-<div class="square bluePath">24</div>
-<div class="square yellowPath">25</div>
-<div class="square">26</div>
-<div class="square bluePath">27</div>
-<div class="square yellowPath">28</div>
-<div class="square">29</div>
-<div class="square bluePath">30</div>
-<div class="square yellowPath">31</div>
-<div class="square">32</div>
-<div class="square bluePath">33</div>
-<div class="square yellowPath">34</div>
-<div class="square">35</div>
-<div class="square bluePath">36</div>
+<!-- GREEN HOME -->
+
+<div class="home greenHome">
+
+<div class="homeBox">
+
+<div class="token green" data-player="1" data-token="0"></div>
+<div class="token green" data-player="1" data-token="1"></div>
+<div class="token green" data-player="1" data-token="2"></div>
+<div class="token green" data-player="1" data-token="3"></div>
+
 </div>
 
-<div class="track left">
-<div class="square redPath">37</div>
-<div class="square redPath">38</div>
-<div class="square redPath">39</div>
-<div class="square">40</div>
-<div class="square">41</div>
-<div class="square">42</div>
-<div class="square redPath">43</div>
-<div class="square redPath">44</div>
-<div class="square redPath">45</div>
-<div class="square">46</div>
-<div class="square">47</div>
-<div class="square">48</div>
-<div class="square redPath">49</div>
-<div class="square redPath">50</div>
-<div class="square redPath">51</div>
-<div class="square">52</div>
-<div class="square">53</div>
-<div class="square">54</div>
 </div>
 
-<div class="track right">
-<div class="square greenPath">55</div>
-<div class="square greenPath">56</div>
-<div class="square greenPath">57</div>
-<div class="square">58</div>
-<div class="square">59</div>
-<div class="square">60</div>
-<div class="square greenPath">61</div>
-<div class="square greenPath">62</div>
-<div class="square greenPath">63</div>
-<div class="square">64</div>
-<div class="square">65</div>
-<div class="square">66</div>
-<div class="square greenPath">67</div>
-<div class="square greenPath">68</div>
-<div class="square greenPath">69</div>
-<div class="square">70</div>
-<div class="square">71</div>
-<div class="square">72</div>
+<!-- YELLOW HOME -->
+
+<div class="home yellowHome">
+
+<div class="homeBox">
+
+<div class="token yellow" data-player="2" data-token="0"></div>
+<div class="token yellow" data-player="2" data-token="1"></div>
+<div class="token yellow" data-player="2" data-token="2"></div>
+<div class="token yellow" data-player="2" data-token="3"></div>
+
+</div>
+
+</div>
+
+<!-- BLUE HOME -->
+
+<div class="home blueHome">
+
+<div class="homeBox">
+
+<div class="token blue" data-player="3" data-token="0"></div>
+<div class="token blue" data-player="3" data-token="1"></div>
+<div class="token blue" data-player="3" data-token="2"></div>
+<div class="token blue" data-player="3" data-token="3"></div>
+
+</div>
+
+</div>
+
+<!-- BOARD PATH -->
+
+<div class="path vertical">
+
+<script>
+for(let i=1;i<=27;i++){
+document.write('<div class="cell">'+i+'</div>');
+}
+</script>
+
+</div>
+
+<div class="path horizontal">
+
+<script>
+for(let i=28;i<=54;i++){
+document.write('<div class="cell">'+i+'</div>');
+}
+</script>
+
 </div>
 
 <div class="center">★</div>
@@ -396,23 +371,30 @@ button{width:90%;margin:5px auto}
 <div class="dice" id="dice">🎲</div>
 
 <div id="message">
-Dice Roll करके गेम शुरू करें
+Roll Dice करके गेम शुरू करें
 </div>
 
-<button id="rollBtn" onclick="rollDice()">🎲 Roll Dice</button>
-<button onclick="newGame()">🔄 New Game</button>
+<button onclick="rollDice()">
+🎲 Roll Dice
+</button>
+
+<button onclick="newGame()">
+🔄 New Game
+</button>
 
 <div class="players">
-<div class="player p1">🔴 Red</div>
-<div class="player p2">🟢 Green</div>
-<div class="player p3">🟡 Yellow</div>
-<div class="player p4">🔵 Blue</div>
+
+<div class="player pRed">🔴 Red</div>
+<div class="player pGreen">🟢 Green</div>
+<div class="player pYellow">🟡 Yellow</div>
+<div class="player pBlue">🔵 Blue</div>
+
 </div>
 
 </div>
 
 <div class="footer">
-© 2026 MR Ludo • Free Game
+© 2026 MR Ludo
 </div>
 
 </div>
@@ -420,78 +402,272 @@ Dice Roll करके गेम शुरू करें
 <script>
 
 const players=[
-{name:"Red",emoji:"🔴"},
-{name:"Green",emoji:"🟢"},
-{name:"Yellow",emoji:"🟡"},
-{name:"Blue",emoji:"🔵"}
+{
+name:"Red",
+emoji:"🔴",
+color:"red",
+start:0
+},
+{
+name:"Green",
+emoji:"🟢",
+color:"green",
+start:13
+},
+{
+name:"Yellow",
+emoji:"🟡",
+color:"yellow",
+start:26
+},
+{
+name:"Blue",
+emoji:"🔵",
+color:"blue",
+start:39
+}
 ];
 
 const diceFaces=["⚀","⚁","⚂","⚃","⚄","⚅"];
 
 let currentPlayer=0;
+let diceValue=0;
 let score=0;
-let gameOver=false;
+
+let positions=[
+[-1,-1,-1,-1],
+[-1,-1,-1,-1],
+[-1,-1,-1,-1],
+[-1,-1,-1,-1]
+];
+
+function updateTurn(){
+
+const p=players[currentPlayer];
+
+document.getElementById("playerName").innerText=p.name;
+
+document.getElementById("turn").innerText=
+p.emoji+" "+p.name+" Player की बारी";
+
+}
 
 function rollDice(){
 
-if(gameOver)return;
+diceValue=Math.floor(Math.random()*6)+1;
 
-const number=Math.floor(Math.random()*6)+1;
+document.getElementById("dice").innerText=
+diceFaces[diceValue-1];
 
-document.getElementById("dice").innerText=diceFaces[number-1];
-
-score+=number;
-
-document.getElementById("score").innerText=score;
-
-const player=players[currentPlayer];
+const p=players[currentPlayer];
 
 document.getElementById("message").innerText=
-player.emoji+" "+player.name+
-" ने "+number+" निकाला! 🎉";
+p.emoji+" "+p.name+" ने "+diceValue+" निकाला।";
 
-if(number===6){
+if(diceValue===6){
 
-document.getElementById("turn").innerText=
-player.emoji+" "+player.name+
-" को 6 मिला — फिर से Roll करें!";
+document.getElementById("message").innerText+=
+" 6 आया है! गोटी पर क्लिक करके बाहर निकालें।";
 
 }else{
 
+setTimeout(()=>{
+nextPlayer();
+},700);
+
+}
+
+}
+
+function nextPlayer(){
+
 currentPlayer=(currentPlayer+1)%players.length;
+
+diceValue=0;
 
 updateTurn();
 
 }
 
+function moveToken(player,token){
+
+if(player!==currentPlayer){
+
+document.getElementById("message").innerText=
+"⚠️ अभी "+players[currentPlayer].name+" की बारी है।";
+
+return;
+
 }
 
-function updateTurn(){
+if(diceValue===0){
 
-const player=players[currentPlayer];
+document.getElementById("message").innerText=
+"पहले Dice Roll करें।";
 
-document.getElementById("playerName").innerText=
-player.name;
+return;
 
-document.getElementById("turn").innerText=
-player.emoji+" "+player.name+" Player की बारी";
+}
+
+let pos=positions[player][token];
+
+if(pos===-1){
+
+if(diceValue!==6){
+
+document.getElementById("message").innerText=
+"❌ गोटी बाहर निकालने के लिए 6 चाहिए।";
+
+return;
+
+}
+
+positions[player][token]=0;
+
+score+=10;
+
+document.getElementById("score").innerText=score;
+
+document.getElementById("message").innerText=
+"🎉 गोटी बाहर आ गई!";
+
+renderTokens();
+
+diceValue=0;
+
+return;
+
+}
+
+positions[player][token]+=diceValue;
+
+score+=diceValue;
+
+document.getElementById("score").innerText=score;
+
+if(positions[player][token]>=56){
+
+positions[player][token]=56;
+
+document.getElementById("message").innerText=
+"🏆 गोटी HOME के पास पहुंच गई!";
+
+}else{
+
+document.getElementById("message").innerText=
+"🚶 "+players[player].name+
+" की गोटी "+diceValue+" कदम चली।";
+
+}
+
+renderTokens();
+
+diceValue=0;
+
+nextPlayer();
+
+}
+
+function renderTokens(){
+
+document.querySelectorAll(".movingToken")
+.forEach(x=>x.remove());
+
+for(let p=0;p<4;p++){
+
+for(let t=0;t<4;t++){
+
+let pos=positions[p][t];
+
+if(pos<0)continue;
+
+let token=document.createElement("div");
+
+token.className=
+"movingToken "+players[p].color;
+
+token.onclick=()=>{
+moveToken(p,t);
+};
+
+let progress=Math.min(pos,56);
+
+let x;
+let y;
+
+if(progress<=14){
+
+x=40+(progress/14)*20;
+y=48;
+
+}else if(progress<=28){
+
+x=60;
+y=48+((progress-14)/14)*20;
+
+}else if(progress<=42){
+
+x=60-((progress-28)/14)*20;
+y=68;
+
+}else{
+
+x=40;
+y=68-((progress-42)/14)*20;
+
+}
+
+token.style.left="calc("+x+"% - 13px)";
+token.style.top="calc("+y+"% - 13px)";
+
+document.getElementById("board").appendChild(token);
+
+}
+
+}
 
 }
 
 function newGame(){
 
 currentPlayer=0;
+diceValue=0;
 score=0;
-gameOver=false;
+
+positions=[
+[-1,-1,-1,-1],
+[-1,-1,-1,-1],
+[-1,-1,-1,-1],
+[-1,-1,-1,-1]
+];
 
 document.getElementById("dice").innerText="🎲";
+
 document.getElementById("score").innerText="0";
+
 document.getElementById("message").innerText=
-"नया गेम शुरू हो गया! Dice Roll करें";
+"नया गेम शुरू हो गया! Dice Roll करें।";
+
+document.querySelectorAll(".movingToken")
+.forEach(x=>x.remove());
 
 updateTurn();
 
 }
+
+document.querySelectorAll(".token")
+.forEach(token=>{
+
+token.addEventListener("click",function(){
+
+const player=parseInt(this.dataset.player);
+const number=parseInt(this.dataset.token);
+
+moveToken(player,number);
+
+});
+
+});
 
 updateTurn();
 

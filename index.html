@@ -2,8 +2,8 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MR Ludo</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MR Ludo - Free Online Ludo Game</title>
 
 <style>
 *{box-sizing:border-box}
@@ -11,125 +11,381 @@
 body{
 margin:0;
 font-family:Arial,sans-serif;
-background:#101827;
-color:white;
+background:linear-gradient(135deg,#0f172a,#1e293b);
+color:#fff;
 text-align:center;
 }
 
-h1{
-margin:18px 0 5px;
-font-size:32px;
+header{
+padding:18px 10px 5px;
 }
 
-p{
-margin:5px;
+h1{
+margin:0;
+font-size:34px;
+}
+
+.subtitle{
 color:#cbd5e1;
+margin:6px 0 12px;
 }
 
 .game{
-max-width:600px;
+width:min(96vw,620px);
 margin:auto;
-padding:15px;
+padding:8px;
+}
+
+.info{
+display:flex;
+justify-content:space-between;
+gap:8px;
+margin:10px 0;
+}
+
+.infoBox{
+flex:1;
+background:#334155;
+padding:10px;
+border-radius:12px;
+font-weight:bold;
+}
+
+#turn{
+font-size:18px;
+margin:10px 0;
+color:#facc15;
 }
 
 .board{
-width:min(92vw,520px);
-height:min(92vw,520px);
-margin:20px auto;
-display:grid;
-grid-template-columns:repeat(15,1fr);
-grid-template-rows:repeat(15,1fr);
-background:white;
-border:8px solid white;
-box-shadow:0 8px 25px #0008;
+position:relative;
+width:min(94vw,560px);
+aspect-ratio:1;
+margin:12px auto;
+background:#fff;
+border:8px solid #fff;
+border-radius:8px;
+overflow:hidden;
+box-shadow:0 12px 35px #0009;
 }
 
-.cell{
-border:1px solid #bbb;
-background:white;
-}
-
-.red{background:#ef4444}
-.green{background:#22c55e}
-.yellow{background:#facc15}
-.blue{background:#3b82f6}
-
-.home{
-grid-column:span 6;
-grid-row:span 6;
+.quad{
+position:absolute;
+width:40%;
+height:40%;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:38px;
-border:8px solid white;
 }
 
-.path{
+.redHome{left:0;top:0;background:#ef4444}
+.greenHome{right:0;top:0;background:#22c55e}
+.yellowHome{left:0;bottom:0;background:#facc15}
+.blueHome{right:0;bottom:0;background:#3b82f6}
+
+.homeInner{
+width:65%;
+height:65%;
 background:#fff;
+border-radius:20px;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-wrap:wrap;
+padding:10px;
+gap:8px;
 }
+
+.dot{
+width:25px;
+height:25px;
+border-radius:50%;
+background:#ddd;
+border:3px solid #777;
+}
+
+.redDot{background:#ef4444}
+.greenDot{background:#22c55e}
+.yellowDot{background:#facc15}
+.blueDot{background:#3b82f6}
 
 .center{
-grid-column:7;
-grid-row:7;
+position:absolute;
+left:40%;
+top:40%;
+width:20%;
+height:20%;
+background:conic-gradient(
+#ef4444 0 25%,
+#22c55e 25% 50%,
+#3b82f6 50% 75%,
+#facc15 75% 100%
+);
 display:flex;
 align-items:center;
 justify-content:center;
 font-size:30px;
-background:linear-gradient(135deg,#ef4444,#3b82f6);
 }
+
+.track{
+position:absolute;
+left:40%;
+top:0;
+width:20%;
+height:40%;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+grid-template-rows:repeat(6,1fr);
+background:#fff;
+}
+
+.track.bottom{
+top:60%;
+}
+
+.track.left{
+left:0;
+top:40%;
+width:40%;
+height:20%;
+grid-template-columns:repeat(6,1fr);
+grid-template-rows:repeat(3,1fr);
+}
+
+.track.right{
+left:60%;
+top:40%;
+width:40%;
+height:20%;
+grid-template-columns:repeat(6,1fr);
+grid-template-rows:repeat(3,1fr);
+}
+
+.square{
+border:1px solid #aaa;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:11px;
+color:#444;
+background:#fff;
+}
+
+.redPath{background:#fecaca}
+.greenPath{background:#bbf7d0}
+.yellowPath{background:#fef08a}
+.bluePath{background:#bfdbfe}
 
 .controls{
 background:#1e293b;
-padding:20px;
+padding:18px;
 border-radius:18px;
+margin-top:14px;
 }
 
 .dice{
-font-size:70px;
-margin:10px;
+font-size:72px;
+height:85px;
+line-height:85px;
 }
 
 button{
-background:#facc15;
 border:0;
-padding:14px 30px;
+padding:14px 28px;
 border-radius:30px;
 font-size:18px;
 font-weight:bold;
 cursor:pointer;
+background:#facc15;
+color:#111827;
+margin:6px;
 }
 
-button:active{
-transform:scale(.95);
+button:hover{
+filter:brightness(1.08);
+}
+
+button:disabled{
+opacity:.45;
+cursor:not-allowed;
 }
 
 #message{
-margin:15px;
-font-size:18px;
+font-size:17px;
+min-height:25px;
+margin:8px;
+color:#e2e8f0;
+}
+
+.players{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:8px;
+margin-top:12px;
+}
+
+.player{
+padding:10px;
+border-radius:12px;
+font-weight:bold;
+}
+
+.p1{background:#dc2626}
+.p2{background:#16a34a}
+.p3{background:#ca8a04}
+.p4{background:#2563eb}
+
+.footer{
+margin:20px 0;
+color:#94a3b8;
+font-size:13px;
+}
+
+@media(max-width:430px){
+h1{font-size:28px}
+.dice{font-size:60px}
+button{width:90%;margin:5px auto}
 }
 </style>
 </head>
 
 <body>
 
+<header>
 <h1>🎲 MR Ludo</h1>
-<p>Free Online Ludo Game</p>
+<div class="subtitle">Free Online Ludo Game</div>
+</header>
 
 <div class="game">
 
+<div class="info">
+<div class="infoBox">🏆 Score<br><span id="score">0</span></div>
+<div class="infoBox">🎯 Turn<br><span id="playerName">Red</span></div>
+</div>
+
+<div id="turn">🔴 Red Player की बारी</div>
+
 <div class="board">
 
-<div class="home red">🔴</div>
-<div class="path"></div>
-<div class="home green">🟢</div>
+<div class="quad redHome">
+<div class="homeInner">
+<div class="dot redDot"></div>
+<div class="dot redDot"></div>
+<div class="dot redDot"></div>
+<div class="dot redDot"></div>
+</div>
+</div>
 
-<div class="path"></div>
-<div class="path"></div>
-<div class="path"></div>
+<div class="quad greenHome">
+<div class="homeInner">
+<div class="dot greenDot"></div>
+<div class="dot greenDot"></div>
+<div class="dot greenDot"></div>
+<div class="dot greenDot"></div>
+</div>
+</div>
 
-<div class="home yellow">🟡</div>
-<div class="path"></div>
-<div class="home blue">🔵</div>
+<div class="quad yellowHome">
+<div class="homeInner">
+<div class="dot yellowDot"></div>
+<div class="dot yellowDot"></div>
+<div class="dot yellowDot"></div>
+<div class="dot yellowDot"></div>
+</div>
+</div>
+
+<div class="quad blueHome">
+<div class="homeInner">
+<div class="dot blueDot"></div>
+<div class="dot blueDot"></div>
+<div class="dot blueDot"></div>
+<div class="dot blueDot"></div>
+</div>
+</div>
+
+<div class="track">
+<div class="square redPath">1</div>
+<div class="square">2</div>
+<div class="square greenPath">3</div>
+<div class="square">4</div>
+<div class="square">5</div>
+<div class="square greenPath">6</div>
+<div class="square redPath">7</div>
+<div class="square">8</div>
+<div class="square greenPath">9</div>
+<div class="square redPath">10</div>
+<div class="square">11</div>
+<div class="square greenPath">12</div>
+<div class="square redPath">13</div>
+<div class="square">14</div>
+<div class="square greenPath">15</div>
+<div class="square redPath">16</div>
+<div class="square">17</div>
+<div class="square greenPath">18</div>
+</div>
+
+<div class="track bottom">
+<div class="square yellowPath">19</div>
+<div class="square">20</div>
+<div class="square bluePath">21</div>
+<div class="square yellowPath">22</div>
+<div class="square">23</div>
+<div class="square bluePath">24</div>
+<div class="square yellowPath">25</div>
+<div class="square">26</div>
+<div class="square bluePath">27</div>
+<div class="square yellowPath">28</div>
+<div class="square">29</div>
+<div class="square bluePath">30</div>
+<div class="square yellowPath">31</div>
+<div class="square">32</div>
+<div class="square bluePath">33</div>
+<div class="square yellowPath">34</div>
+<div class="square">35</div>
+<div class="square bluePath">36</div>
+</div>
+
+<div class="track left">
+<div class="square redPath">37</div>
+<div class="square redPath">38</div>
+<div class="square redPath">39</div>
+<div class="square">40</div>
+<div class="square">41</div>
+<div class="square">42</div>
+<div class="square redPath">43</div>
+<div class="square redPath">44</div>
+<div class="square redPath">45</div>
+<div class="square">46</div>
+<div class="square">47</div>
+<div class="square">48</div>
+<div class="square redPath">49</div>
+<div class="square redPath">50</div>
+<div class="square redPath">51</div>
+<div class="square">52</div>
+<div class="square">53</div>
+<div class="square">54</div>
+</div>
+
+<div class="track right">
+<div class="square greenPath">55</div>
+<div class="square greenPath">56</div>
+<div class="square greenPath">57</div>
+<div class="square">58</div>
+<div class="square">59</div>
+<div class="square">60</div>
+<div class="square greenPath">61</div>
+<div class="square greenPath">62</div>
+<div class="square greenPath">63</div>
+<div class="square">64</div>
+<div class="square">65</div>
+<div class="square">66</div>
+<div class="square greenPath">67</div>
+<div class="square greenPath">68</div>
+<div class="square greenPath">69</div>
+<div class="square">70</div>
+<div class="square">71</div>
+<div class="square">72</div>
+</div>
 
 <div class="center">★</div>
 
@@ -140,39 +396,104 @@ font-size:18px;
 <div class="dice" id="dice">🎲</div>
 
 <div id="message">
-आपकी बारी है — Dice Roll करें
+Dice Roll करके गेम शुरू करें
 </div>
 
-<button onclick="rollDice()">🎲 Roll Dice</button>
+<button id="rollBtn" onclick="rollDice()">🎲 Roll Dice</button>
+<button onclick="newGame()">🔄 New Game</button>
 
-<h3>आपका Score: <span id="score">0</span></h3>
+<div class="players">
+<div class="player p1">🔴 Red</div>
+<div class="player p2">🟢 Green</div>
+<div class="player p3">🟡 Yellow</div>
+<div class="player p4">🔵 Blue</div>
+</div>
 
+</div>
+
+<div class="footer">
+© 2026 MR Ludo • Free Game
 </div>
 
 </div>
 
 <script>
 
-let score = 0;
+const players=[
+{name:"Red",emoji:"🔴"},
+{name:"Green",emoji:"🟢"},
+{name:"Yellow",emoji:"🟡"},
+{name:"Blue",emoji:"🔵"}
+];
+
+const diceFaces=["⚀","⚁","⚂","⚃","⚄","⚅"];
+
+let currentPlayer=0;
+let score=0;
+let gameOver=false;
 
 function rollDice(){
 
-let number = Math.floor(Math.random()*6)+1;
+if(gameOver)return;
 
-let dice = ["⚀","⚁","⚂","⚃","⚄","⚅"];
+const number=Math.floor(Math.random()*6)+1;
 
-document.getElementById("dice").innerText =
-dice[number-1];
+document.getElementById("dice").innerText=diceFaces[number-1];
 
-score += number;
+score+=number;
 
-document.getElementById("score").innerText =
-score;
+document.getElementById("score").innerText=score;
 
-document.getElementById("message").innerText =
-"आपने "+number+" निकाला! 🎉";
+const player=players[currentPlayer];
+
+document.getElementById("message").innerText=
+player.emoji+" "+player.name+
+" ने "+number+" निकाला! 🎉";
+
+if(number===6){
+
+document.getElementById("turn").innerText=
+player.emoji+" "+player.name+
+" को 6 मिला — फिर से Roll करें!";
+
+}else{
+
+currentPlayer=(currentPlayer+1)%players.length;
+
+updateTurn();
 
 }
+
+}
+
+function updateTurn(){
+
+const player=players[currentPlayer];
+
+document.getElementById("playerName").innerText=
+player.name;
+
+document.getElementById("turn").innerText=
+player.emoji+" "+player.name+" Player की बारी";
+
+}
+
+function newGame(){
+
+currentPlayer=0;
+score=0;
+gameOver=false;
+
+document.getElementById("dice").innerText="🎲";
+document.getElementById("score").innerText="0";
+document.getElementById("message").innerText=
+"नया गेम शुरू हो गया! Dice Roll करें";
+
+updateTurn();
+
+}
+
+updateTurn();
 
 </script>
 

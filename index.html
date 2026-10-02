@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A to Z फुल्ली फंक्शनल लूडो गेम</title>
+    <title>A to Z काम करने वाला लूडो गेम</title>
     <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #1a202c;
@@ -14,261 +15,153 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            margin: 0;
+            padding: 20px;
         }
-        h1 { margin-bottom: 10px; font-size: 28px; text-shadow: 2px 2px 4px rgba(0,0,0,0.6); }
+        h1 { margin-bottom: 15px; font-size: 26px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        
         .game-layout {
             display: flex;
-            gap: 30px;
+            gap: 25px;
             background: #2d3748;
             padding: 20px;
             border-radius: 16px;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 25px rgba(0,0,0,0.5);
             align-items: center;
-        }
-        canvas {
-            border: 4px solid #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            cursor: pointer;
-        }
-        .panel {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            min-width: 220px;
-        }
-        .status-box {
-            font-size: 18px;
-            font-weight: bold;
-            padding: 15px;
-            border-radius: 8px;
-            background: #4a5568;
-            text-align: center;
-            width: 100%;
-            border-left: 5px solid #ed8936;
-        }
-        .dice-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-        .dice {
-            width: 70px;
-            height: 70px;
-            background: #fff;
-            color: #000;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
+            flex-wrap: wrap;
             justify-content: center;
-            font-size: 36px;
-            font-weight: bold;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.2), 0 4px 6px rgba(0,0,0,0.4);
         }
-        button {
-            padding: 12px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            background: #ed8936;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            width: 100%;
+
+        /* 15x15 ग्रिड आधारित लूडो बोर्ड */
+        .ludo-board {
+            display: grid;
+            grid-template-columns: repeat(15, 36px);
+            grid-template-rows: repeat(15, 36px);
+            background-color: #fff;
+            border: 5px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
         }
+
+        /* मुख्य घर (Bases) */
+        .home-box { grid-column: span 6; grid-row: span 6; display: flex; justify-content: center; align-items: center; border: 1px solid #000; position: relative; }
+        .green-home { background-color: #2ecc71; }
+        .yellow-home { background-color: #f1c40f; }
+        .red-home { background-color: #e74c3c; }
+        .blue-home { background-color: #3498db; }
+
+        /* घरों के अंदर सफेद लॉबी */
+        .white-lobby { width: 70%; height: 70%; background: #fff; border-radius: 10px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; padding: 8px; gap: 8px; }
+        .pocket { border-radius: 50%; border: 2px dashed #7f8c8d; display: flex; justify-content: center; align-items: center; background: #f8f9fa; }
+
+        /* सामान्य रास्ते के खाने (Cells) */
+        .cell { background: #fff; border: 1px solid #bdc3c7; display: flex; justify-content: center; align-items: center; position: relative; font-size: 11px; color: #000; }
+        
+        /* रंगीन रास्ते और स्टार ज़ोन */
+        .g-path { background-color: #2ecc71 !important; }
+        .y-path { background-color: #f1c40f !important; }
+        .r-path { background-color: #e74c3c !important; }
+        .b-path { background-color: #3498db !important; }
+        .safe-star { background-color: #dfe6e9 !important; font-weight: bold; font-size: 18px !important; color: #2c3e50; }
+
+        /* बीच का तिकोना होम बॉक्स */
+        .center-home { grid-column: span 3; grid-row: span 3; background: #ecf0f1; position: relative; border: 1px solid #000; overflow: hidden; }
+        .triangle { position: absolute; width: 0; height: 0; border-style: solid; }
+        .t-green { border-width: 0 54px 54px 54px; border-color: transparent transparent #2ecc71 transparent; top:0; left:0; }
+        .t-yellow { border-width: 54px 54px 54px 0; border-color: transparent #f1c40f transparent transparent; top:0; right:0; }
+        .t-blue { border-width: 54px 54px 0 54px; border-color: #3498db transparent transparent transparent; bottom:0; left:0; }
+        .t-red { border-width: 54px 0 54px 54px; border-color: transparent transparent transparent #e74c3c; top:0; left:0; }
+
+        /* गोटियाँ (Tokens / Pawns) */
+        .token { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.4); cursor: pointer; display: inline-block; position: relative; z-index: 10; transition: transform 0.1s; }
+        .token:hover { transform: scale(1.2); }
+        .token.red-t { background-color: #c0392b; }
+        .token.green-t { background-color: #27ae60; }
+        .token.yellow-t { background-color: #d35400; }
+        .token.blue-t { background-color: #2980b9; }
+
+        /* कंट्रोल्स पैनल */
+        .panel { display: flex; flex-direction: column; align-items: center; gap: 15px; min-width: 220px; }
+        .status-box { font-size: 16px; font-weight: bold; padding: 12px; border-radius: 8px; background: #4a5568; text-align: center; width: 100%; border-left: 5px solid #ed8936; }
+        .dice { width: 65px; height: 65px; background: #fff; color: #000; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3); margin-bottom: 10px; }
+        button { padding: 12px 24px; font-size: 16px; font-weight: bold; background: #ed8936; color: white; border: none; border-radius: 8px; cursor: pointer; width: 100%; transition: 0.2s; }
         button:hover { background: #dd6b20; }
-        button:disabled { background: #a0aec0; cursor: not-allowed; }
-        .instructions {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #cbd5e0;
-            text-align: center;
-            max-width: 600px;
-            line-height: 1.5;
-        }
+        button:disabled { background: #718096; cursor: not-allowed; }
     </style>
 </head>
 <body>
 
-<h1>मल्टीप्लेयर लूडो (पूर्ण गेम इंजन)</h1>
+<h1>A to Z ओरिजिनल लूडो गेम</h1>
 
 <div class="game-layout">
-    <!-- लूडो ग्राफिक्स बोर्ड -->
-    <canvas id="ludoCanvas" width="600" height="600"></canvas>
+    <!-- पूरा लूडो बोर्ड स्ट्रक्चर -->
+    <div class="ludo-board">
+        <!-- 1. हरा घर (Top Left) -->
+        <div class="home-box green-home">
+            <div class="white-lobby">
+                <div class="pocket" id="g-p0"></div><div class="pocket" id="g-p1"></div>
+                <div class="pocket" id="g-p2"></div><div class="pocket" id="g-p3"></div>
+            </div>
+        </div>
 
-    <!-- कंट्रोल पैनल -->
-    <div class="panel">
-        <div class="status-box" id="statusPanel">खेल शुरू करें!</div>
-        <div class="dice-container">
-            <div class="dice" id="diceBox">-</div>
-            <button id="rollBtn" onclick="rollDice()">पासा फेंकें</button>
+        <!-- 2. ऊपरी रास्ता (Top Middle - Column 1) -->
+        <div class="cell" id="c12"></div><div class="cell g-path" id="c13"></div><div class="cell safe-star" id="c14">★</div>
+        <div class="cell" id="c11"></div><div class="cell g-path" id="c52"></div><div class="cell" id="c15"></div>
+        <div class="cell" id="c10"></div><div class="cell g-path" id="c53"></div><div class="cell" id="c16"></div>
+        <div class="cell" id="c9"></div><div class="cell g-path" id="c54"></div><div class="cell" id="c17"></div>
+        <div class="cell safe-star" id="c8">★</div><div class="cell g-path" id="c55"></div><div class="cell" id="c18"></div>
+        <div class="cell" id="c7"></div><div class="cell g-path" id="c56"></div><div class="cell" id="c19"></div>
+
+        <!-- 3. पीला घर (Top Right) -->
+        <div class="home-box yellow-home">
+            <div class="white-lobby">
+                <div class="pocket" id="y-p0"></div><div class="pocket" id="y-p1"></div>
+                <div class="pocket" id="y-p2"></div><div class="pocket" id="y-p3"></div>
+            </div>
+        </div>
+
+        <!-- 4. बायाँ रास्ता (Left Middle) -->
+        <div class="cell" id="c1"></div><div class="cell" id="c2"></div><div class="cell" id="c3"></div><div class="cell" id="c4"></div><div class="cell safe-star" id="c5">★</div><div class="cell" id="c6"></div>
+        <div class="cell r-path" id="c0"></div><div class="cell r-path" id="c47"></div><div class="cell r-path" id="c48"></div><div class="cell r-path" id="c49"></div><div class="cell r-path" id="c50"></div><div class="cell r-path" id="c51"></div>
+        <div class="cell" id="c46"></div><div class="cell" id="c45"></div><div class="cell safe-star" id="c44">★</div><div class="cell" id="c43"></div><div class="cell" id="c42"></div><div class="cell" id="c41"></div>
+
+        <!-- 5. बीच का एंड पॉइंट (Center Area) -->
+        <div class="center-home">
+            <div class="triangle t-red"></div>
+            <div class="triangle t-green"></div>
+            <div class="triangle t-yellow"></div>
+            <div class="triangle t-blue"></div>
+        </div>
+
+        <!-- 6. दायाँ रास्ता (Right Middle) -->
+        <div class="cell" id="c20"></div><div class="cell" id="c21"></div><div class="cell safe-star" id="c22">★</div><div class="cell" id="c23"></div><div class="cell" id="c24"></div><div class="cell" id="c25"></div>
+        <div class="cell y-path" id="c61"></div><div class="cell y-path" id="c60"></div><div class="cell y-path" id="c59"></div><div class="cell y-path" id="c58"></div><div class="cell y-path" id="c57"></div><div class="cell y-path" id="c26"></div>
+        <div class="cell" id="c31"></div><div class="cell safe-star" id="c30">★</div><div class="cell" id="c29"></div><div class="cell" id="c28"></div><div class="cell" id="c27"></div><div class="cell" id="c26_2"></div>
+
+        <!-- 7. लाल घर (Bottom Left) -->
+        <div class="home-box red-home">
+            <div class="white-lobby">
+                <div class="pocket" id="r-p0"></div><div class="pocket" id="r-p1"></div>
+                <div class="pocket" id="r-p2"></div><div class="pocket" id="r-p3"></div>
+            </div>
+        </div>
+
+        <!-- 8. निचला रास्ता (Bottom Middle) -->
+        <div class="cell" id="c40"></div><div class="cell b-path" id="c66"></div><div class="cell" id="c32"></div>
+        <div class="cell" id="c39"></div><div class="cell b-path" id="c65"></div><div class="cell safe-star" id="c33">★</div>
+        <div class="cell" id="c38"></div><div class="cell b-path" id="c64"></div><div class="cell" id="c34"></div>
+        <div class="cell" id="c37"></div><div class="cell b-path" id="c63"></div><div class="cell" id="c35"></div>
+        <div class="cell" id="c36"></div><div class="cell b-path" id="c62"></div><div class="cell" id="c35_2"></div>
+        <div class="cell" id="c35_3"></div><div class="cell b-path" id="c67"></div><div class="cell" id="c34_2"></div>
+
+        <!-- 9. नीला घर (Bottom Right) -->
+        <div class="home-box blue-home">
+            <div class="white-lobby">
+                <div class="pocket" id="b-p0"></div><div class="pocket" id="b-p1"></div>
+                <div class="pocket" id="b-p2"></div><div class="pocket" id="b-p3"></div>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="instructions">
-    <strong>नियम:</strong> पासे में <b>6</b> आने पर ही गोटी घर से बाहर (Unlock) निकलेगी। पासा रोल करने के बाद बोर्ड पर मौजूद अपनी गोटी पर क्लिक करके उसे आगे बढ़ाएं। 6 आने पर या विरोधी की गोटी काटने पर आपको **दोबारा चांस** मिलेगा!
-</div>
-
-<script>
-const canvas = document.getElementById('ludoCanvas');
-const ctx = canvas.getContext('2d');
-const S = 600; // बोर्ड का साइज
-const C = S / 15; // 40px प्रति बॉक्स
-
-const COLORS = { 0: '#e74c3c', 1: '#2ecc71', 2: '#f1c40f', 3: '#3498db' }; // लाल, हरा, पीला, नीला
-const PLAYER_NAMES = ['लाल (Red)', 'हरा (Green)', 'पीला (Yellow)', 'नीला (Blue)'];
-
-// पूरे लूडो ट्रैक के 52 खानों के ग्रिड कोऑर्डिनेट्स (X, Y)
-const TRACK = [
-    {x:1,y:6}, {x:2,y:6}, {x:3,y:6}, {x:4,y:6}, {x:5,y:6},
-    {x:6,y:5}, {x:6,y:4}, {x:6,y:3}, {x:6,y:2}, {x:6,y:1}, {x:6,y:0},
-    {x:7,y:0}, {x:8,y:0},
-    {x:8,y:1}, {x:8,y:2}, {x:8,y:3}, {x:8,y:4}, {x:8,y:5},
-    {x:9,y:6}, {x:10,y:6}, {x:11,y:6}, {x:12,y:6}, {x:13,y:6}, {x:14,y:6},
-    {x:14,y:7}, {x:14,y:8},
-    {x:13,y:8}, {x:12,y:8}, {x:11,y:8}, {x:10,y:8}, {x:9,y:8},
-    {x:8,y:9}, {x:8,y:10}, {x:8,y:11}, {x:8,y:12}, {x:8,y:13}, {x:8,y:14},
-    {x:7,y:14}, {x:6,y:14},
-    {x:6,y:13}, {x:6,y:12}, {x:6,y:11}, {x:6,y:10}, {x:6,y:9},
-    {x:5,y:8}, {x:4,y:8}, {x:3,y:8}, {x:2,y:8}, {x:1,y:8}, {x:0,y:8},
-    {x:0,y:7}, {x:0,y:6}
-];
-
-// प्रत्येक खिलाड़ी की होम एंट्री, बेस लोकेशन और अंदर का रास्ता
-const PLAYER_CONFIG = [
-    // 0: Red
-    { startTrack: 0, homeEntry: 50, basePos: [{x:1.5,y:1.5},{x:3.5,y:1.5},{x:1.5,y:3.5},{x:3.5,y:3.5}], homeCells: [{x:1,y:7},{x:2,y:7},{x:3,y:7},{x:4,y:7},{x:5,y:7}] },
-    // 1: Green
-    { startTrack: 13, homeEntry: 11, basePos: [{x:10.5,y:1.5},{x:12.5,y:1.5},{x:10.5,y:3.5},{x:12.5,y:3.5}], homeCells: [{x:7,y:1},{x:7,y:2},{x:7,y:3},{x:7,y:4},{x:7,y:5}] },
-    // 2: Yellow
-    { startTrack: 26, homeEntry: 24, basePos: [{x:10.5,y:10.5},{x:12.5,y:10.5},{x:10.5,y:12.5},{x:12.5,y:12.5}], homeCells: [{x:13,y:7},{x:12,y:7},{x:11,y:7},{x:10,y:7},{x:9,y:7}] },
-    // 3: Blue
-    { startTrack: 39, homeEntry: 37, basePos: [{x:1.5,y:10.5},{x:3.5,y:10.5},{x:1.5,y:12.5},{x:3.5,y:12.5}], homeCells: [{x:7,y:13},{x:7,y:12},{x:7,y:11},{x:7,y:10},{x:7,y:9}] }
-];
-
-const SAFE_SECTIONS =; // सुरक्षित खाने (स्टार जोन)
-
-let gameState = {
-    turn: 0,
-    diceValue: 0,
-    hasRolled: false,
-    tokens: [
-        [-1, -1, -1, -1], // Red गोटियाँ (-1 = घर के अंदर लॉक)
-        [-1, -1, -1, -1], // Green
-        [-1, -1, -1, -1], // Yellow
-        [-1, -1, -1, -1]  // Blue
-    ]
-};
-
-// पूरा लूडो बोर्ड डिजाइन ड्रा करना
-function drawBoard() {
-    ctx.clearRect(0, 0, S, S);
-
-    // 1. ग्रिड और चार बड़े घर बनाना
-    for(let r=0; r<15; r++){
-        for(let c=0; c<15; c++){
-            ctx.strokeStyle = '#cbd5e0';
-            ctx.lineWidth = 1;
-            ctx.fillStyle = '#fff';
-            
-            if(r<6 && c<6) ctx.fillStyle = COLORS[1]; // Green Base
-            else if(r<6 && c>8) ctx.fillStyle = COLORS[2]; // Yellow Base
-            else if(r>8 && c>8) ctx.fillStyle = COLORS[3]; // Blue Base
-            else if(r>8 && c<6) ctx.fillStyle = COLORS[0]; // Red Base
-            
-            ctx.fillRect(c*C, r*C, C, C);
-            ctx.strokeRect(c*C, r*C, C, C);
-        }
-    }
-
-    // 2. होम रन पाथ (गोटियों के रंगीन रास्ते)
-    for(let p=0; p<4; p++) {
-        PLAYER_CONFIG[p].homeCells.forEach(cell => {
-            ctx.fillStyle = COLORS[p];
-            ctx.fillRect(cell.x*C, cell.y*C, C, C);
-            ctx.strokeRect(cell.x*C, cell.y*C, C, C);
-        });
-        // शुरुआती बॉक्स हाइलाइट
-        let startCell = TRACK[PLAYER_CONFIG[p].startTrack];
-        ctx.fillStyle = COLORS[p];
-        ctx.fillRect(startCell.x*C, startCell.y*C, C, C);
-    }
-
-    // 3. स्टार (सुरक्षित खाने) ड्रा करना
-    SAFE_SECTIONS.forEach(idx => {
-        let cell = TRACK[idx];
-        ctx.fillStyle = '#edf2f7';
-        ctx.fillRect(cell.x*C, cell.y*C, C, C);
-        ctx.fillStyle = '#4a5568';
-        ctx.font = "22px Arial";
-        ctx.fillText("★", cell.x*C + 10, cell.y*C + 28);
-    });
-
-    // 4. बीच का त्रिकोणीय एंड पॉइंट (Center Home)
-    ctx.fillStyle = COLORS[0]; ctx.beginPath(); ctx.moveTo(6*C,6*C); ctx.lineTo(7.5*C,7.5*C); ctx.lineTo(6*C,9*C); ctx.fill(); // Red
-    ctx.fillStyle = COLORS[1]; ctx.beginPath(); ctx.moveTo(6*C,6*C); ctx.lineTo(7.5*C,7.5*C); ctx.lineTo(9*C,6*C); ctx.fill(); // Green
-    ctx.fillStyle = COLORS[2]; ctx.beginPath(); ctx.moveTo(9*C,6*C); ctx.lineTo(7.5*C,7.5*C); ctx.lineTo(9*C,9*C); ctx.fill(); // Yellow
-    ctx.fillStyle = COLORS[3]; ctx.beginPath(); ctx.moveTo(6*C,9*C); ctx.lineTo(7.5*C,7.5*C); ctx.lineTo(9*C,9*C); ctx.fill(); // Blue
-
-    // 5. घरों के अंदर सफेद बॉक्स (जहाँ गोटियाँ बैठती हैं)
-    for(let p=0; p<4; p++) {
-        PLAYER_CONFIG[p].basePos.forEach(pos => {
-            ctx.fillStyle = '#fff';
-            ctx.beginPath();
-            ctx.arc(pos.x*C, pos.y*C, C/1.8, 0, 2*Math.PI);
-            ctx.fill();
-            ctx.stroke();
-        });
-    }
-
-    // 6. गोटियाँ (Tokens) ड्रा करना
-    for(let p=0; p<4; p++) {
-        for(let t=0; t<4; t++) {
-            let step = gameState.tokens[p][t];
-            let x, y;
-
-            if(step === -1) { // लॉक स्थिति में घर के अंदर
-                x = PLAYER_CONFIG[p].basePos[t].x * C;
-                y = PLAYER_CONFIG[p].basePos[t].y * C;
-            } else if(step >= 57) { // जीत की स्थिति (होम)
-                x = 7.5 * C;
-                y = 7.5 * C;
-            } else if(step >= 51) { // रंगीन होम गैलरी में
-                let cell = PLAYER_CONFIG[p].homeCells[step - 51];
-                x = cell.x * C + C/2;
-                y = cell.y * C + C/2;
-            } else { // बाहर के रास्ते पर दौड़ते हुए
-                let trackIdx = (PLAYER_CONFIG[p].startTrack + step) % 52;
-                let cell = TRACK[trackIdx];
-                x = cell.x * C + C/2;
-                y = cell.y * C + C/2;
-            }
-
-            // अगर एक ही खाने में एक से ज़्यादा गोटियाँ हों तो ओवरलैप से बचाने के लिए थोड़ा खिसकाना
-            let offset = t * 3 - 4;
-            ctx.fillStyle = COLORS[p];
-            ctx.beginPath();
-            ctx.arc(x + offset, y + offset, 13, 0, 2*Math.PI);
-            ctx.fill();
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            
-            ctx.beginPath();
-            ctx.arc(x + offset, y + offset, 6, 0, 2*Math.PI);
-            ctx.strokeStyle = '#fff';
-            ctx.stroke();
-        }
-    }
-}
-
-// पासा फेंकना (Dice Roll Engine)
-function rollDice() {
-    if(gameState.hasRolled) return;
-
-    gameState.diceValue = Math.floor(Math.random() * 6) + 1;
+    <!-- कंट्रोल्स पैनल -->
+    <div class="panel">
+        <div class="status-box" id="msgBox">खेल शुरू करें! लाल की बारी।</div>
+        <div class="dice" id="diceElement">-</div>

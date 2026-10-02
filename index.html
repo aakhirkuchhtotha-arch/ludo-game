@@ -3,201 +3,175 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MR Ludo Game</title>
+<title>MR Ludo</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#101827;
+color:white;
+text-align:center;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #111827, #1e3a8a);
-  color: white;
-  text-align: center;
+h1{
+margin:18px 0 5px;
+font-size:32px;
 }
 
-header {
-  padding: 20px 10px;
+p{
+margin:5px;
+color:#cbd5e1;
 }
 
-h1 {
-  margin: 0;
-  font-size: 32px;
+.game{
+max-width:600px;
+margin:auto;
+padding:15px;
 }
 
-.game {
-  width: 95%;
-  max-width: 600px;
-  margin: auto;
+.board{
+width:min(92vw,520px);
+height:min(92vw,520px);
+margin:20px auto;
+display:grid;
+grid-template-columns:repeat(15,1fr);
+grid-template-rows:repeat(15,1fr);
+background:white;
+border:8px solid white;
+box-shadow:0 8px 25px #0008;
 }
 
-.board {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
-  background: white;
-  padding: 8px;
-  border-radius: 15px;
-  margin: 15px auto;
+.cell{
+border:1px solid #bbb;
+background:white;
 }
 
-.home {
-  height: 150px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  font-weight: bold;
-  border-radius: 12px;
+.red{background:#ef4444}
+.green{background:#22c55e}
+.yellow{background:#facc15}
+.blue{background:#3b82f6}
+
+.home{
+grid-column:span 6;
+grid-row:span 6;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:38px;
+border:8px solid white;
 }
 
-.red { background: #ef4444; }
-.green { background: #22c55e; }
-.yellow { background: #facc15; color: #111; }
-.blue { background: #3b82f6; }
-
-.center {
-  height: 150px;
-  background: #f8fafc;
-  color: #111;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  font-size: 40px;
+.path{
+background:#fff;
 }
 
-.info {
-  background: rgba(0,0,0,.35);
-  padding: 15px;
-  border-radius: 15px;
+.center{
+grid-column:7;
+grid-row:7;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:30px;
+background:linear-gradient(135deg,#ef4444,#3b82f6);
 }
 
-.dice {
-  font-size: 65px;
-  margin: 10px;
+.controls{
+background:#1e293b;
+padding:20px;
+border-radius:18px;
 }
 
-button {
-  border: none;
-  padding: 14px 28px;
-  border-radius: 30px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  background: #facc15;
-  color: #111;
+.dice{
+font-size:70px;
+margin:10px;
 }
 
-button:hover {
-  transform: scale(1.05);
+button{
+background:#facc15;
+border:0;
+padding:14px 30px;
+border-radius:30px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
 }
 
-#message {
-  margin: 12px;
-  min-height: 25px;
+button:active{
+transform:scale(.95);
+}
+
+#message{
+margin:15px;
+font-size:18px;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>🎲 MR Ludo</h1>
-  <p>Free Online Ludo Game</p>
-</header>
+<h1>🎲 MR Ludo</h1>
+<p>Free Online Ludo Game</p>
 
 <div class="game">
 
-  <div class="board">
+<div class="board">
 
-    <div class="home red">🔴</div>
-    <div class="center">🎲</div>
-    <div class="home green">🟢</div>
+<div class="home red">🔴</div>
+<div class="path"></div>
+<div class="home green">🟢</div>
 
-    <div class="center">🏠</div>
-    <div class="center">⭐</div>
-    <div class="center">🏠</div>
+<div class="path"></div>
+<div class="path"></div>
+<div class="path"></div>
 
-    <div class="home yellow">🟡</div>
-    <div class="center">🎯</div>
-    <div class="home blue">🔵</div>
+<div class="home yellow">🟡</div>
+<div class="path"></div>
+<div class="home blue">🔵</div>
 
-  </div>
+<div class="center">★</div>
 
-  <div class="info">
+</div>
 
-    <h2>Player vs Computer</h2>
+<div class="controls">
 
-    <div id="dice" class="dice">🎲</div>
+<div class="dice" id="dice">🎲</div>
 
-    <div id="message">
-      Dice घुमाने के लिए नीचे दबाएँ
-    </div>
+<div id="message">
+आपकी बारी है — Dice Roll करें
+</div>
 
-    <button onclick="rollDice()">🎲 Roll Dice</button>
+<button onclick="rollDice()">🎲 Roll Dice</button>
 
-    <h3>Your Score: <span id="playerScore">0</span></h3>
-    <h3>Computer Score: <span id="computerScore">0</span></h3>
+<h3>आपका Score: <span id="score">0</span></h3>
 
-  </div>
+</div>
 
 </div>
 
 <script>
 
-let playerScore = 0;
-let computerScore = 0;
+let score = 0;
 
-const diceImages = ["⚀","⚁","⚂","⚃","⚄","⚅"];
+function rollDice(){
 
-function rollDice() {
+let number = Math.floor(Math.random()*6)+1;
 
-  let playerDice = Math.floor(Math.random() * 6) + 1;
+let dice = ["⚀","⚁","⚂","⚃","⚄","⚅"];
 
-  document.getElementById("dice").innerText =
-    diceImages[playerDice - 1];
+document.getElementById("dice").innerText =
+dice[number-1];
 
-  playerScore += playerDice;
+score += number;
 
-  document.getElementById("playerScore").innerText =
-    playerScore;
+document.getElementById("score").innerText =
+score;
 
-  document.getElementById("message").innerText =
-    "आपने " + playerDice + " निकाला!";
+document.getElementById("message").innerText =
+"आपने "+number+" निकाला! 🎉";
 
-  setTimeout(computerTurn, 800);
-}
-
-function computerTurn() {
-
-  let computerDice = Math.floor(Math.random() * 6) + 1;
-
-  computerScore += computerDice;
-
-  document.getElementById("computerScore").innerText =
-    computerScore;
-
-  document.getElementById("message").innerText =
-    "Computer ने " + computerDice + " निकाला!";
-
-  if (playerScore >= 50 || computerScore >= 50) {
-
-    if (playerScore > computerScore) {
-      document.getElementById("message").innerText =
-        "🏆 आपने जीत हासिल की!";
-    }
-    else if (computerScore > playerScore) {
-      document.getElementById("message").innerText =
-        "🤖 Computer जीत गया!";
-    }
-    else {
-      document.getElementById("message").innerText =
-        "🤝 Match Draw!";
-    }
-  }
 }
 
 </script>
